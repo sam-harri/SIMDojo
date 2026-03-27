@@ -1,0 +1,7 @@
+id = "003-min-of-array"
+title = "Min of Array"
+difficulty = "easy"
+order = 3
+compile_flags = "-std=c++17 -mavx2 -O2"
+time_limit_seconds = 5
+memory_limit_mb = 128

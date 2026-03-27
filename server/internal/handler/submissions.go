@@ -20,6 +20,8 @@ type SubmissionsHandler struct {
 	rateMu      sync.Mutex
 	submitLimit map[string]time.Time
 	runLimit    map[string]time.Time
+
+	done chan struct{}
 }
 
 func NewSubmissionsHandler(pool *pgxpool.Pool, j *judge.Judge) *SubmissionsHandler {
@@ -28,6 +30,7 @@ func NewSubmissionsHandler(pool *pgxpool.Pool, j *judge.Judge) *SubmissionsHandl
 		judge:       j,
 		submitLimit: make(map[string]time.Time),
 		runLimit:    make(map[string]time.Time),
+		done:        make(chan struct{}),
 	}
 	go h.cleanupRateLimits()
 	return h
@@ -37,21 +40,31 @@ func NewSubmissionsHandler(pool *pgxpool.Pool, j *judge.Judge) *SubmissionsHandl
 func (h *SubmissionsHandler) cleanupRateLimits() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
-	for range ticker.C {
-		now := time.Now()
-		h.rateMu.Lock()
-		for k, v := range h.submitLimit {
-			if now.Sub(v) > 10*time.Second {
-				delete(h.submitLimit, k)
+	for {
+		select {
+		case <-ticker.C:
+			now := time.Now()
+			h.rateMu.Lock()
+			for k, v := range h.submitLimit {
+				if now.Sub(v) > 10*time.Second {
+					delete(h.submitLimit, k)
+				}
 			}
-		}
-		for k, v := range h.runLimit {
-			if now.Sub(v) > 10*time.Second {
-				delete(h.runLimit, k)
+			for k, v := range h.runLimit {
+				if now.Sub(v) > 10*time.Second {
+					delete(h.runLimit, k)
+				}
 			}
+			h.rateMu.Unlock()
+		case <-h.done:
+			return
 		}
-		h.rateMu.Unlock()
 	}
+}
+
+// Close stops the background cleanup goroutine.
+func (h *SubmissionsHandler) Close() {
+	close(h.done)
 }
 
 type submitRequest struct {

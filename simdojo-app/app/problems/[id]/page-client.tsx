@@ -37,6 +37,7 @@ export function ProblemPageClient({ problem }: ProblemPageClientProps) {
   const [error, setError] = useState<string | null>(null)
   const [pollTimedOut, setPollTimedOut] = useState(false)
   const [resetKey, setResetKey] = useState(0)
+  const [acEnabled, setAcEnabled] = useState(true)
   const pollRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pollCountRef = useRef(0)
 
@@ -109,11 +110,11 @@ export function ProblemPageClient({ problem }: ProblemPageClientProps) {
   const isLoading = activeMode !== null
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] overflow-hidden overscroll-none">
+    <div className="h-full overflow-hidden overscroll-none">
       <ResizablePanelGroup orientation="horizontal">
         {/* Left panel — problem description */}
         <ResizablePanel defaultSize="45%" minSize="20%">
-          <div className="h-full overflow-auto p-6">
+          <div className="h-full overflow-auto p-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="mx-auto max-w-2xl">
               <div className="mb-6">
                 <div className="mb-1 flex items-center gap-3">
@@ -153,6 +154,9 @@ export function ProblemPageClient({ problem }: ProblemPageClientProps) {
                       <RotateCcw className="size-3" />
                       Reset
                     </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setAcEnabled((v) => !v)} className={`h-7 px-2 text-xs ${acEnabled ? "text-foreground" : "text-muted-foreground"}`}>
+                      Autocomplete {acEnabled ? "on" : "off"}
+                    </Button>
                   </div>
                   {isSignedIn ? (
                     <div className="flex items-center gap-2">
@@ -185,7 +189,7 @@ export function ProblemPageClient({ problem }: ProblemPageClientProps) {
 
                 {/* Editor */}
                 <div className="min-h-0 flex-1 overflow-hidden">
-                  <CodeEditor key={resetKey} initialCode={code} onChange={handleChange} />
+                  <CodeEditor key={resetKey} initialCode={code} onChange={handleChange} acEnabled={acEnabled} />
                 </div>
               </div>
             </ResizablePanel>

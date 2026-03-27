@@ -82,7 +82,8 @@ func (j *Judge) evaluate(ctx context.Context, submissionID int64, problemSlug, c
 
 	// Check for dangerous code
 	if err := checkDangerousCode(code); err != nil {
-		j.updateStatus(ctx, submissionID, "compile_error", 0, 0, nil, nil, fmt.Sprintf("Forbidden code: %s", err.Error()))
+		msg := fmt.Sprintf("Forbidden code: %s", err.Error())
+		j.updateStatus(ctx, submissionID, "compile_error", 0, 0, &msg, nil, "")
 		return nil
 	}
 
@@ -203,10 +204,18 @@ func (j *Judge) evaluate(ctx context.Context, submissionID int64, problemSlug, c
 	// Marshal test_results and first_failure as JSON for storage
 	var testResultsJSON, firstFailureJSON []byte
 	if mode == "run" && len(harnessOut.Results) > 0 {
-		testResultsJSON, _ = json.Marshal(harnessOut.Results)
+		var err error
+		testResultsJSON, err = json.Marshal(harnessOut.Results)
+		if err != nil {
+			slog.Error("marshal test results", "submission_id", submissionID, "error", err)
+		}
 	}
 	if harnessOut.FirstFailure != nil {
-		firstFailureJSON, _ = json.Marshal(harnessOut.FirstFailure)
+		var err error
+		firstFailureJSON, err = json.Marshal(harnessOut.FirstFailure)
+		if err != nil {
+			slog.Error("marshal first failure", "submission_id", submissionID, "error", err)
+		}
 	}
 
 	// Update submission with full results

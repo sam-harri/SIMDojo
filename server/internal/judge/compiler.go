@@ -23,9 +23,13 @@ func compile(ctx context.Context, workDir, sourceFile, outputBinary, flags strin
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
+		output := string(out)
+		if output == "" {
+			output = err.Error()
+		}
 		return &CompileResult{
 			Success: false,
-			Output:  string(out),
+			Output:  output,
 		}, nil
 	}
 
@@ -59,6 +63,7 @@ func checkDangerousCode(code string) error {
 		"execl(",
 		"execlp(",
 		"fork(",
+		"dlopen(",
 	}
 	for _, d := range dangerousCalls {
 		if strings.Contains(code, d) {

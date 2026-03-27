@@ -1,0 +1,1932 @@
+[
+  {
+    "name": "_mm_blend_epi32",
+    "sig": "__m128i _mm_blend_epi32(__m128i a, __m128i b, const int imm8)",
+    "detail": "(__m128i, __m128i, const int) → __m128i",
+    "description": "Blend packed 32-bit integers from \"a\" and \"b\" using control mask \"imm8\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tIF imm8[j]\n\t\tdst[i+31:i] := b[i+31:i]\n\tELSE\n\t\tdst[i+31:i] := a[i+31:i]\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPBLENDD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastb_epi8",
+    "sig": "__m128i _mm_broadcastb_epi8(__m128i a)",
+    "detail": "(__m128i) → __m128i",
+    "description": "Broadcast the low packed 8-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*8\n\tdst[i+7:i] := a[7:0]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPBROADCASTB",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastd_epi32",
+    "sig": "__m128i _mm_broadcastd_epi32(__m128i a)",
+    "detail": "(__m128i) → __m128i",
+    "description": "Broadcast the low packed 32-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tdst[i+31:i] := a[31:0]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPBROADCASTD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastq_epi64",
+    "sig": "__m128i _mm_broadcastq_epi64(__m128i a)",
+    "detail": "(__m128i) → __m128i",
+    "description": "Broadcast the low packed 64-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tdst[i+63:i] := a[63:0]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPBROADCASTQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastsd_pd",
+    "sig": "__m128d _mm_broadcastsd_pd(__m128d a)",
+    "detail": "(__m128d) → __m128d",
+    "description": "Broadcast the low double-precision (64-bit) floating-point element from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tdst[i+63:i] := a[63:0]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "MOVDDUP",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastsi128_si256",
+    "sig": "__m256i _mm_broadcastsi128_si256(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Broadcast 128 bits of integer data from \"a\" to all 128-bit lanes in \"dst\".",
+    "operation": "dst[127:0] := a[127:0]\ndst[255:128] := a[127:0]\ndst[MAX:256] := 0",
+    "instruction": "VBROADCASTI128",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastss_ps",
+    "sig": "__m128 _mm_broadcastss_ps(__m128 a)",
+    "detail": "(__m128) → __m128",
+    "description": "Broadcast the low single-precision (32-bit) floating-point element from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tdst[i+31:i] := a[31:0]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VBROADCASTSS",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_broadcastw_epi16",
+    "sig": "__m128i _mm_broadcastw_epi16(__m128i a)",
+    "detail": "(__m128i) → __m128i",
+    "description": "Broadcast the low packed 16-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*16\n\tdst[i+15:i] := a[15:0]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPBROADCASTW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i32gather_epi32",
+    "sig": "__m128i _mm_i32gather_epi32(int const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(int const*, __m128i, const int) → __m128i",
+    "description": "Gather 32-bit integers from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERDD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i32gather_epi64",
+    "sig": "__m128i _mm_i32gather_epi64(__int64 const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(__int64 const*, __m128i, const int) → __m128i",
+    "description": "Gather 64-bit integers from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERDQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i32gather_pd",
+    "sig": "__m128d _mm_i32gather_pd(double const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(double const*, __m128i, const int) → __m128d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VGATHERDPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i32gather_ps",
+    "sig": "__m128 _mm_i32gather_ps(float const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(float const*, __m128i, const int) → __m128",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VGATHERDPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i64gather_epi32",
+    "sig": "__m128i _mm_i64gather_epi32(int const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(int const*, __m128i, const int) → __m128i",
+    "description": "Gather 32-bit integers from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*32\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:64] := 0",
+    "instruction": "VPGATHERQD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i64gather_epi64",
+    "sig": "__m128i _mm_i64gather_epi64(__int64 const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(__int64 const*, __m128i, const int) → __m128i",
+    "description": "Gather 64-bit integers from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERQQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i64gather_pd",
+    "sig": "__m128d _mm_i64gather_pd(double const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(double const*, __m128i, const int) → __m128d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VGATHERQPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_i64gather_ps",
+    "sig": "__m128 _mm_i64gather_ps(float const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(float const*, __m128i, const int) → __m128",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*32\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:64] := 0",
+    "instruction": "VGATHERQPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i32gather_epi32",
+    "sig": "__m128i _mm_mask_i32gather_epi32(__m128i src, int const* base_addr, __m128i vindex, __m128i mask, const int scale)",
+    "detail": "(__m128i, int const*, __m128i, __m128i, const int) → __m128i",
+    "description": "Gather 32-bit integers from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*32\n\tIF mask[i+31]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERDD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i32gather_epi64",
+    "sig": "__m128i _mm_mask_i32gather_epi64(__m128i src, __int64 const* base_addr, __m128i vindex, __m128i mask, const int scale)",
+    "detail": "(__m128i, __int64 const*, __m128i, __m128i, const int) → __m128i",
+    "description": "Gather 64-bit integers from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*32\n\tIF mask[i+63]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERDQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i32gather_pd",
+    "sig": "__m128d _mm_mask_i32gather_pd(__m128d src, double const* base_addr, __m128i vindex, __m128d mask, const int scale)",
+    "detail": "(__m128d, double const*, __m128i, __m128d, const int) → __m128d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*32\n\tIF mask[i+63]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VGATHERDPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i32gather_ps",
+    "sig": "__m128 _mm_mask_i32gather_ps(__m128 src, float const* base_addr, __m128i vindex, __m128 mask, const int scale)",
+    "detail": "(__m128, float const*, __m128i, __m128, const int) → __m128",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*32\n\tIF mask[i+31]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VGATHERDPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i64gather_epi32",
+    "sig": "__m128i _mm_mask_i64gather_epi32(__m128i src, int const* base_addr, __m128i vindex, __m128i mask, const int scale)",
+    "detail": "(__m128i, int const*, __m128i, __m128i, const int) → __m128i",
+    "description": "Gather 32-bit integers from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*32\n\tm := j*64\n\tIF mask[i+31]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:64] := 0\ndst[MAX:64] := 0",
+    "instruction": "VPGATHERQD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i64gather_epi64",
+    "sig": "__m128i _mm_mask_i64gather_epi64(__m128i src, __int64 const* base_addr, __m128i vindex, __m128i mask, const int scale)",
+    "detail": "(__m128i, __int64 const*, __m128i, __m128i, const int) → __m128i",
+    "description": "Gather 64-bit integers from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*64\n\tIF mask[i+63]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERQQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i64gather_pd",
+    "sig": "__m128d _mm_mask_i64gather_pd(__m128d src, double const* base_addr, __m128i vindex, __m128d mask, const int scale)",
+    "detail": "(__m128d, double const*, __m128i, __m128d, const int) → __m128d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tm := j*64\n\tIF mask[i+63]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VGATHERQPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_mask_i64gather_ps",
+    "sig": "__m128 _mm_mask_i64gather_ps(__m128 src, float const* base_addr, __m128i vindex, __m128 mask, const int scale)",
+    "detail": "(__m128, float const*, __m128i, __m128, const int) → __m128",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 1\n\ti := j*32\n\tm := j*64\n\tIF mask[i+31]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:64] := 0\ndst[MAX:64] := 0",
+    "instruction": "VGATHERQPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_maskload_epi32",
+    "sig": "__m128i _mm_maskload_epi32(int const* mem_addr, __m128i mask)",
+    "detail": "(int const*, __m128i) → __m128i",
+    "description": "Load packed 32-bit integers from memory into \"dst\" using \"mask\" (elements are zeroed out when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tIF mask[i+31]\n\t\tdst[i+31:i] := MEM[mem_addr+i+31:mem_addr+i]\n\tELSE\n\t\tdst[i+31:i] := 0\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPMASKMOVD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_maskload_epi64",
+    "sig": "__m128i _mm_maskload_epi64(__int64 const* mem_addr, __m128i mask)",
+    "detail": "(__int64 const*, __m128i) → __m128i",
+    "description": "Load packed 64-bit integers from memory into \"dst\" using \"mask\" (elements are zeroed out when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tIF mask[i+63]\n\t\tdst[i+63:i] := MEM[mem_addr+i+63:mem_addr+i]\n\tELSE\n\t\tdst[i+63:i] := 0\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPMASKMOVQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_maskstore_epi32",
+    "sig": "void _mm_maskstore_epi32(int* mem_addr, __m128i mask, __m128i a)",
+    "detail": "(int*, __m128i, __m128i) → void",
+    "description": "Store packed 32-bit integers from \"a\" into memory using \"mask\" (elements are not stored when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tIF mask[i+31]\n\t\tMEM[mem_addr+i+31:mem_addr+i] := a[i+31:i]\n\tFI\nENDFOR",
+    "instruction": "VPMASKMOVD",
+    "category": "Store",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_maskstore_epi64",
+    "sig": "void _mm_maskstore_epi64(__int64* mem_addr, __m128i mask, __m128i a)",
+    "detail": "(__int64*, __m128i, __m128i) → void",
+    "description": "Store packed 64-bit integers from \"a\" into memory using \"mask\" (elements are not stored when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tIF mask[i+63]\n\t\tMEM[mem_addr+i+63:mem_addr+i] := a[i+63:i]\n\tFI\nENDFOR",
+    "instruction": "VPMASKMOVQ",
+    "category": "Store",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_sllv_epi32",
+    "sig": "__m128i _mm_sllv_epi32(__m128i a, __m128i count)",
+    "detail": "(__m128i, __m128i) → __m128i",
+    "description": "Shift packed 32-bit integers in \"a\" left by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tIF count[i+31:i] < 32\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] << count[i+31:i])\n\tELSE\n\t\tdst[i+31:i] := 0\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPSLLVD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_sllv_epi64",
+    "sig": "__m128i _mm_sllv_epi64(__m128i a, __m128i count)",
+    "detail": "(__m128i, __m128i) → __m128i",
+    "description": "Shift packed 64-bit integers in \"a\" left by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tIF count[i+63:i] < 64\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] << count[i+63:i])\n\tELSE\n\t\tdst[i+63:i] := 0\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPSLLVQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_srav_epi32",
+    "sig": "__m128i _mm_srav_epi32(__m128i a, __m128i count)",
+    "detail": "(__m128i, __m128i) → __m128i",
+    "description": "Shift packed 32-bit integers in \"a\" right by the amount specified by the corresponding element in \"count\" while shifting in sign bits, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tIF count[i+31:i] < 32\n\t\tdst[i+31:i] := SignExtend32(a[i+31:i] >> count[i+31:i])\n\tELSE\n\t\tdst[i+31:i] := (a[i+31] ? 0xFFFFFFFF : 0)\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPSRAVD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_srlv_epi32",
+    "sig": "__m128i _mm_srlv_epi32(__m128i a, __m128i count)",
+    "detail": "(__m128i, __m128i) → __m128i",
+    "description": "Shift packed 32-bit integers in \"a\" right by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tIF count[i+31:i] < 32\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] >> count[i+31:i])\n\tELSE\n\t\tdst[i+31:i] := 0\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPSRLVD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm_srlv_epi64",
+    "sig": "__m128i _mm_srlv_epi64(__m128i a, __m128i count)",
+    "detail": "(__m128i, __m128i) → __m128i",
+    "description": "Shift packed 64-bit integers in \"a\" right by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 1\n\ti := j*64\n\tIF count[i+63:i] < 64\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] >> count[i+63:i])\n\tELSE\n\t\tdst[i+63:i] := 0\n\tFI\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPSRLVQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_abs_epi16",
+    "sig": "__m256i _mm256_abs_epi16(__m256i a)",
+    "detail": "(__m256i) → __m256i",
+    "description": "Compute the absolute value of packed signed 16-bit integers in \"a\", and store the unsigned results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := ABS(a[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPABSW",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_abs_epi32",
+    "sig": "__m256i _mm256_abs_epi32(__m256i a)",
+    "detail": "(__m256i) → __m256i",
+    "description": "Compute the absolute value of packed signed 32-bit integers in \"a\", and store the unsigned results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := ABS(a[i+31:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPABSD",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_abs_epi8",
+    "sig": "__m256i _mm256_abs_epi8(__m256i a)",
+    "detail": "(__m256i) → __m256i",
+    "description": "Compute the absolute value of packed signed 8-bit integers in \"a\", and store the unsigned results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := ABS(a[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPABSB",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_add_epi16",
+    "sig": "__m256i _mm256_add_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed 16-bit integers in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := a[i+15:i] + b[i+15:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_add_epi32",
+    "sig": "__m256i _mm256_add_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed 32-bit integers in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := a[i+31:i] + b[i+31:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDD",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_add_epi64",
+    "sig": "__m256i _mm256_add_epi64(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed 64-bit integers in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := a[i+63:i] + b[i+63:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDQ",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_add_epi8",
+    "sig": "__m256i _mm256_add_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed 8-bit integers in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := a[i+7:i] + b[i+7:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_adds_epi16",
+    "sig": "__m256i _mm256_adds_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed 16-bit integers in \"a\" and \"b\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := Saturate16( a[i+15:i] + b[i+15:i] )\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_adds_epi8",
+    "sig": "__m256i _mm256_adds_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed 8-bit integers in \"a\" and \"b\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := Saturate8( a[i+7:i] + b[i+7:i] )\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDSB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_adds_epu16",
+    "sig": "__m256i _mm256_adds_epu16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed unsigned 16-bit integers in \"a\" and \"b\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := SaturateU16( a[i+15:i] + b[i+15:i] )\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDUSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_adds_epu8",
+    "sig": "__m256i _mm256_adds_epu8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Add packed unsigned 8-bit integers in \"a\" and \"b\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := SaturateU8( a[i+7:i] + b[i+7:i] )\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPADDUSB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_alignr_epi8",
+    "sig": "__m256i _mm256_alignr_epi8(__m256i a, __m256i b, const int imm8)",
+    "detail": "(__m256i, __m256i, const int) → __m256i",
+    "description": "Concatenate pairs of 16-byte blocks in \"a\" and \"b\" into a 32-byte temporary result, shift the result right by \"imm8\" bytes, and store the low 16 bytes in \"dst\".",
+    "operation": "FOR j := 0 to 1\n\ti := j*128\n\ttmp[255:0] := ((a[i+127:i] << 128)[255:0] OR b[i+127:i]) >> (imm8*8)\n\tdst[i+127:i] := tmp[127:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPALIGNR",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_and_si256",
+    "sig": "__m256i _mm256_and_si256(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compute the bitwise AND of 256 bits (representing integer data) in \"a\" and \"b\", and store the result in \"dst\".",
+    "operation": "dst[255:0] := (a[255:0] AND b[255:0])\ndst[MAX:256] := 0",
+    "instruction": "VPAND",
+    "category": "Logical",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_andnot_si256",
+    "sig": "__m256i _mm256_andnot_si256(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compute the bitwise NOT of 256 bits (representing integer data) in \"a\" and then AND with \"b\", and store the result in \"dst\".",
+    "operation": "dst[255:0] := ((NOT a[255:0]) AND b[255:0])\ndst[MAX:256] := 0",
+    "instruction": "VPANDN",
+    "category": "Logical",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_avg_epu16",
+    "sig": "__m256i _mm256_avg_epu16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Average packed unsigned 16-bit integers in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := (a[i+15:i] + b[i+15:i] + 1) >> 1\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPAVGW",
+    "category": "Probability/Statistics",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_avg_epu8",
+    "sig": "__m256i _mm256_avg_epu8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Average packed unsigned 8-bit integers in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := (a[i+7:i] + b[i+7:i] + 1) >> 1\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPAVGB",
+    "category": "Probability/Statistics",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_blend_epi16",
+    "sig": "__m256i _mm256_blend_epi16(__m256i a, __m256i b, const int imm8)",
+    "detail": "(__m256i, __m256i, const int) → __m256i",
+    "description": "Blend packed 16-bit integers from \"a\" and \"b\" within 128-bit lanes using control mask \"imm8\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF imm8[j%8]\n\t\tdst[i+15:i] := b[i+15:i]\n\tELSE\n\t\tdst[i+15:i] := a[i+15:i]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBLENDW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_blend_epi32",
+    "sig": "__m256i _mm256_blend_epi32(__m256i a, __m256i b, const int imm8)",
+    "detail": "(__m256i, __m256i, const int) → __m256i",
+    "description": "Blend packed 32-bit integers from \"a\" and \"b\" using control mask \"imm8\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF imm8[j]\n\t\tdst[i+31:i] := b[i+31:i]\n\tELSE\n\t\tdst[i+31:i] := a[i+31:i]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBLENDD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_blendv_epi8",
+    "sig": "__m256i _mm256_blendv_epi8(__m256i a, __m256i b, __m256i mask)",
+    "detail": "(__m256i, __m256i, __m256i) → __m256i",
+    "description": "Blend packed 8-bit integers from \"a\" and \"b\" using \"mask\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tIF mask[i+7]\n\t\tdst[i+7:i] := b[i+7:i]\n\tELSE\n\t\tdst[i+7:i] := a[i+7:i]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBLENDVB",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastb_epi8",
+    "sig": "__m256i _mm256_broadcastb_epi8(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Broadcast the low packed 8-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := a[7:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBROADCASTB",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastd_epi32",
+    "sig": "__m256i _mm256_broadcastd_epi32(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Broadcast the low packed 32-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := a[31:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBROADCASTD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastq_epi64",
+    "sig": "__m256i _mm256_broadcastq_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Broadcast the low packed 64-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := a[63:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBROADCASTQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastsd_pd",
+    "sig": "__m256d _mm256_broadcastsd_pd(__m128d a)",
+    "detail": "(__m128d) → __m256d",
+    "description": "Broadcast the low double-precision (64-bit) floating-point element from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := a[63:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VBROADCASTSD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastsi128_si256",
+    "sig": "__m256i _mm256_broadcastsi128_si256(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Broadcast 128 bits of integer data from \"a\" to all 128-bit lanes in \"dst\".",
+    "operation": "dst[127:0] := a[127:0]\ndst[255:128] := a[127:0]\ndst[MAX:256] := 0",
+    "instruction": "VBROADCASTI128",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastss_ps",
+    "sig": "__m256 _mm256_broadcastss_ps(__m128 a)",
+    "detail": "(__m128) → __m256",
+    "description": "Broadcast the low single-precision (32-bit) floating-point element from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := a[31:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VBROADCASTSS",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_broadcastw_epi16",
+    "sig": "__m256i _mm256_broadcastw_epi16(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Broadcast the low packed 16-bit integer from \"a\" to all elements of \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := a[15:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPBROADCASTW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_bslli_epi128",
+    "sig": "__m256i _mm256_bslli_epi128(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shift 128-bit lanes in \"a\" left by \"imm8\" bytes while shifting in zeros, and store the results in \"dst\".",
+    "operation": "tmp := imm8[7:0]\nIF tmp > 15\n\ttmp := 16\nFI\ndst[127:0] := a[127:0] << (tmp*8)\ndst[255:128] := a[255:128] << (tmp*8)\ndst[MAX:256] := 0",
+    "instruction": "VPSLLDQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_bsrli_epi128",
+    "sig": "__m256i _mm256_bsrli_epi128(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shift 128-bit lanes in \"a\" right by \"imm8\" bytes while shifting in zeros, and store the results in \"dst\".",
+    "operation": "tmp := imm8[7:0]\nIF tmp > 15\n\ttmp := 16\nFI\ndst[127:0] := a[127:0] >> (tmp*8)\ndst[255:128] := a[255:128] >> (tmp*8)\ndst[MAX:256] := 0",
+    "instruction": "VPSRLDQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpeq_epi16",
+    "sig": "__m256i _mm256_cmpeq_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed 16-bit integers in \"a\" and \"b\" for equality, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := ( a[i+15:i] == b[i+15:i] ) ? 0xFFFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPEQW",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpeq_epi32",
+    "sig": "__m256i _mm256_cmpeq_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed 32-bit integers in \"a\" and \"b\" for equality, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := ( a[i+31:i] == b[i+31:i] ) ? 0xFFFFFFFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPEQD",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpeq_epi64",
+    "sig": "__m256i _mm256_cmpeq_epi64(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed 64-bit integers in \"a\" and \"b\" for equality, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := ( a[i+63:i] == b[i+63:i] ) ? 0xFFFFFFFFFFFFFFFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPEQQ",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpeq_epi8",
+    "sig": "__m256i _mm256_cmpeq_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed 8-bit integers in \"a\" and \"b\" for equality, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := ( a[i+7:i] == b[i+7:i] ) ? 0xFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPEQB",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpgt_epi16",
+    "sig": "__m256i _mm256_cmpgt_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 16-bit integers in \"a\" and \"b\" for greater-than, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := ( a[i+15:i] > b[i+15:i] ) ? 0xFFFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPGTW",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpgt_epi32",
+    "sig": "__m256i _mm256_cmpgt_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 32-bit integers in \"a\" and \"b\" for greater-than, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := ( a[i+31:i] > b[i+31:i] ) ? 0xFFFFFFFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPGTD",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpgt_epi64",
+    "sig": "__m256i _mm256_cmpgt_epi64(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 64-bit integers in \"a\" and \"b\" for greater-than, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := ( a[i+63:i] > b[i+63:i] ) ? 0xFFFFFFFFFFFFFFFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPGTQ",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cmpgt_epi8",
+    "sig": "__m256i _mm256_cmpgt_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 8-bit integers in \"a\" and \"b\" for greater-than, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := ( a[i+7:i] > b[i+7:i] ) ? 0xFF : 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPCMPGTB",
+    "category": "Compare",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepi16_epi32",
+    "sig": "__m256i _mm256_cvtepi16_epi32(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Sign extend packed 16-bit integers in \"a\" to packed 32-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j:= 0 to 7\n\ti := 32*j\n\tk := 16*j\n\tdst[i+31:i] := SignExtend32(a[k+15:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVSXWD",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepi16_epi64",
+    "sig": "__m256i _mm256_cvtepi16_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Sign extend packed 16-bit integers in \"a\" to packed 64-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j:= 0 to 3\n\ti := 64*j\n\tk := 16*j\n\tdst[i+63:i] := SignExtend64(a[k+15:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVSXWQ",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepi32_epi64",
+    "sig": "__m256i _mm256_cvtepi32_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Sign extend packed 32-bit integers in \"a\" to packed 64-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j:= 0 to 3\n\ti := 64*j\n\tk := 32*j\n\tdst[i+63:i] := SignExtend64(a[k+31:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVSXDQ",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepi8_epi16",
+    "sig": "__m256i _mm256_cvtepi8_epi16(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Sign extend packed 8-bit integers in \"a\" to packed 16-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*8\n\tl := j*16\n\tdst[l+15:l] := SignExtend16(a[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVSXBW",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepi8_epi32",
+    "sig": "__m256i _mm256_cvtepi8_epi32(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Sign extend packed 8-bit integers in \"a\" to packed 32-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := 32*j\n\tk := 8*j\n\tdst[i+31:i] := SignExtend32(a[k+7:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVSXBD",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepi8_epi64",
+    "sig": "__m256i _mm256_cvtepi8_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Sign extend packed 8-bit integers in the low 8 bytes of \"a\" to packed 64-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := 64*j\n\tk := 8*j\n\tdst[i+63:i] := SignExtend64(a[k+7:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVSXBQ",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepu16_epi32",
+    "sig": "__m256i _mm256_cvtepu16_epi32(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Zero extend packed unsigned 16-bit integers in \"a\" to packed 32-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := 32*j\n\tk := 16*j\n\tdst[i+31:i] := ZeroExtend32(a[k+15:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVZXWD",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepu16_epi64",
+    "sig": "__m256i _mm256_cvtepu16_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Zero extend packed unsigned 16-bit integers in \"a\" to packed 64-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j:= 0 to 3\n\ti := 64*j\n\tk := 16*j\n\tdst[i+63:i] := ZeroExtend64(a[k+15:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVZXWQ",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepu32_epi64",
+    "sig": "__m256i _mm256_cvtepu32_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Zero extend packed unsigned 32-bit integers in \"a\" to packed 64-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j:= 0 to 3\n\ti := 64*j\n\tk := 32*j\n\tdst[i+63:i] := ZeroExtend64(a[k+31:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVZXDQ",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepu8_epi16",
+    "sig": "__m256i _mm256_cvtepu8_epi16(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Zero extend packed unsigned 8-bit integers in \"a\" to packed 16-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*8\n\tl := j*16\n\tdst[l+15:l] := ZeroExtend16(a[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVZXBW",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepu8_epi32",
+    "sig": "__m256i _mm256_cvtepu8_epi32(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Zero extend packed unsigned 8-bit integers in \"a\" to packed 32-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := 32*j\n\tk := 8*j\n\tdst[i+31:i] := ZeroExtend32(a[k+7:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVZXBD",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_cvtepu8_epi64",
+    "sig": "__m256i _mm256_cvtepu8_epi64(__m128i a)",
+    "detail": "(__m128i) → __m256i",
+    "description": "Zero extend packed unsigned 8-bit integers in the low 8 byte sof \"a\" to packed 64-bit integers, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := 64*j\n\tk := 8*j\n\tdst[i+63:i] := ZeroExtend64(a[k+7:k])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMOVZXBQ",
+    "category": "Convert",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_extract_epi16",
+    "sig": "int _mm256_extract_epi16(__m256i a, const int index)",
+    "detail": "(__m256i, const int) → int",
+    "description": "Extract a 16-bit integer from \"a\", selected with \"index\", and store the result in \"dst\".",
+    "operation": "dst[15:0] := (a[255:0] >> (index[3:0] * 16))[15:0]",
+    "instruction": "",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_extract_epi8",
+    "sig": "int _mm256_extract_epi8(__m256i a, const int index)",
+    "detail": "(__m256i, const int) → int",
+    "description": "Extract an 8-bit integer from \"a\", selected with \"index\", and store the result in \"dst\".",
+    "operation": "dst[7:0] := (a[255:0] >> (index[4:0] * 8))[7:0]",
+    "instruction": "",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_extracti128_si256",
+    "sig": "__m128i _mm256_extracti128_si256(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m128i",
+    "description": "Extract 128 bits (composed of integer data) from \"a\", selected with \"imm8\", and store the result in \"dst\".",
+    "operation": "CASE imm8[0] OF\n0: dst[127:0] := a[127:0]\n1: dst[127:0] := a[255:128]\nESAC\ndst[MAX:128] := 0",
+    "instruction": "VEXTRACTI128",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_hadd_epi16",
+    "sig": "__m256i _mm256_hadd_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Horizontally add adjacent pairs of 16-bit integers in \"a\" and \"b\", and pack the signed 16-bit results in \"dst\".",
+    "operation": "dst[15:0] := a[31:16] + a[15:0]\ndst[31:16] := a[63:48] + a[47:32]\ndst[47:32] := a[95:80] + a[79:64]\ndst[63:48] := a[127:112] + a[111:96]\ndst[79:64] := b[31:16] + b[15:0]\ndst[95:80] := b[63:48] + b[47:32]\ndst[111:96] := b[95:80] + b[79:64]\ndst[127:112] := b[127:112] + b[111:96]\ndst[143:128] := a[159:144] + a[143:128]\ndst[159:144] := a[191:176] + a[175:160]\ndst[175:160] := a[223:208] + a[207:192]\ndst[191:176] := a[255:240] + a[239:224]\ndst[207:192] := b[159:144] + b[143:128]\ndst[223:208] := b[191:176] + b[175:160]\ndst[239:224] := b[223:208] + b[207:192]\ndst[255:240] := b[255:240] + b[239:224]\ndst[MAX:256] := 0",
+    "instruction": "VPHADDW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_hadd_epi32",
+    "sig": "__m256i _mm256_hadd_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Horizontally add adjacent pairs of 32-bit integers in \"a\" and \"b\", and pack the signed 32-bit results in \"dst\".",
+    "operation": "dst[31:0] := a[63:32] + a[31:0]\ndst[63:32] := a[127:96] + a[95:64]\ndst[95:64] := b[63:32] + b[31:0]\ndst[127:96] := b[127:96] + b[95:64]\ndst[159:128] := a[191:160] + a[159:128]\ndst[191:160] := a[255:224] + a[223:192]\ndst[223:192] := b[191:160] + b[159:128]\ndst[255:224] := b[255:224] + b[223:192]\ndst[MAX:256] := 0",
+    "instruction": "VPHADDD",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_hadds_epi16",
+    "sig": "__m256i _mm256_hadds_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Horizontally add adjacent pairs of signed 16-bit integers in \"a\" and \"b\" using saturation, and pack the signed 16-bit results in \"dst\".",
+    "operation": "dst[15:0] := Saturate16(a[31:16] + a[15:0])\ndst[31:16] := Saturate16(a[63:48] + a[47:32])\ndst[47:32] := Saturate16(a[95:80] + a[79:64])\ndst[63:48] := Saturate16(a[127:112] + a[111:96])\ndst[79:64] := Saturate16(b[31:16] + b[15:0])\ndst[95:80] := Saturate16(b[63:48] + b[47:32])\ndst[111:96] := Saturate16(b[95:80] + b[79:64])\ndst[127:112] := Saturate16(b[127:112] + b[111:96])\ndst[143:128] := Saturate16(a[159:144] + a[143:128])\ndst[159:144] := Saturate16(a[191:176] + a[175:160])\ndst[175:160] := Saturate16(a[223:208] + a[207:192])\ndst[191:176] := Saturate16(a[255:240] + a[239:224])\ndst[207:192] := Saturate16(b[159:144] + b[143:128])\ndst[223:208] := Saturate16(b[191:176] + b[175:160])\ndst[239:224] := Saturate16(b[223:208] + b[207:192])\ndst[255:240] := Saturate16(b[255:240] + b[239:224])\ndst[MAX:256] := 0",
+    "instruction": "VPHADDSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_hsub_epi16",
+    "sig": "__m256i _mm256_hsub_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Horizontally subtract adjacent pairs of 16-bit integers in \"a\" and \"b\", and pack the signed 16-bit results in \"dst\".",
+    "operation": "dst[15:0] := a[15:0] - a[31:16]\ndst[31:16] := a[47:32] - a[63:48]\ndst[47:32] := a[79:64] - a[95:80]\ndst[63:48] := a[111:96] - a[127:112]\ndst[79:64] := b[15:0] - b[31:16]\ndst[95:80] := b[47:32] - b[63:48]\ndst[111:96] := b[79:64] - b[95:80]\ndst[127:112] := b[111:96] - b[127:112]\ndst[143:128] := a[143:128] - a[159:144]\ndst[159:144] := a[175:160] - a[191:176]\ndst[175:160] := a[207:192] - a[223:208]\ndst[191:176] := a[239:224] - a[255:240]\ndst[207:192] := b[143:128] - b[159:144]\ndst[223:208] := b[175:160] - b[191:176]\ndst[239:224] := b[207:192] - b[223:208]\ndst[255:240] := b[239:224] - b[255:240]\ndst[MAX:256] := 0",
+    "instruction": "VPHSUBW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_hsub_epi32",
+    "sig": "__m256i _mm256_hsub_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Horizontally subtract adjacent pairs of 32-bit integers in \"a\" and \"b\", and pack the signed 32-bit results in \"dst\".",
+    "operation": "dst[31:0] := a[31:0] - a[63:32]\ndst[63:32] := a[95:64] - a[127:96]\ndst[95:64] := b[31:0] - b[63:32]\ndst[127:96] := b[95:64] - b[127:96]\ndst[159:128] := a[159:128] - a[191:160]\ndst[191:160] := a[223:192] - a[255:224]\ndst[223:192] := b[159:128] - b[191:160]\ndst[255:224] := b[223:192] - b[255:224]\ndst[MAX:256] := 0",
+    "instruction": "VPHSUBD",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_hsubs_epi16",
+    "sig": "__m256i _mm256_hsubs_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Horizontally subtract adjacent pairs of signed 16-bit integers in \"a\" and \"b\" using saturation, and pack the signed 16-bit results in \"dst\".",
+    "operation": "dst[15:0] := Saturate16(a[15:0] - a[31:16])\ndst[31:16] := Saturate16(a[47:32] - a[63:48])\ndst[47:32] := Saturate16(a[79:64] - a[95:80])\ndst[63:48] := Saturate16(a[111:96] - a[127:112])\ndst[79:64] := Saturate16(b[15:0] - b[31:16])\ndst[95:80] := Saturate16(b[47:32] - b[63:48])\ndst[111:96] := Saturate16(b[79:64] - b[95:80])\ndst[127:112] := Saturate16(b[111:96] - b[127:112])\ndst[143:128] := Saturate16(a[143:128] - a[159:144])\ndst[159:144] := Saturate16(a[175:160] - a[191:176])\ndst[175:160] := Saturate16(a[207:192] - a[223:208])\ndst[191:176] := Saturate16(a[239:224] - a[255:240])\ndst[207:192] := Saturate16(b[143:128] - b[159:144])\ndst[223:208] := Saturate16(b[175:160] - b[191:176])\ndst[239:224] := Saturate16(b[207:192] - b[223:208])\ndst[255:240] := Saturate16(b[239:224] - b[255:240])\ndst[MAX:256] := 0",
+    "instruction": "VPHSUBSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i32gather_epi32",
+    "sig": "__m256i _mm256_i32gather_epi32(int const* base_addr, __m256i vindex, const int scale)",
+    "detail": "(int const*, __m256i, const int) → __m256i",
+    "description": "Gather 32-bit integers from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPGATHERDD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i32gather_epi64",
+    "sig": "__m256i _mm256_i32gather_epi64(__int64 const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(__int64 const*, __m128i, const int) → __m256i",
+    "description": "Gather 64-bit integers from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPGATHERDQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i32gather_pd",
+    "sig": "__m256d _mm256_i32gather_pd(double const* base_addr, __m128i vindex, const int scale)",
+    "detail": "(double const*, __m128i, const int) → __m256d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VGATHERDPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i32gather_ps",
+    "sig": "__m256 _mm256_i32gather_ps(float const* base_addr, __m256i vindex, const int scale)",
+    "detail": "(float const*, __m256i, const int) → __m256",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tm := j*32\n\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VGATHERDPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i64gather_epi32",
+    "sig": "__m128i _mm256_i64gather_epi32(int const* base_addr, __m256i vindex, const int scale)",
+    "detail": "(int const*, __m256i, const int) → __m128i",
+    "description": "Gather 32-bit integers from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERQD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i64gather_epi64",
+    "sig": "__m256i _mm256_i64gather_epi64(__int64 const* base_addr, __m256i vindex, const int scale)",
+    "detail": "(__int64 const*, __m256i, const int) → __m256i",
+    "description": "Gather 64-bit integers from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPGATHERQQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i64gather_pd",
+    "sig": "__m256d _mm256_i64gather_pd(double const* base_addr, __m256i vindex, const int scale)",
+    "detail": "(double const*, __m256i, const int) → __m256d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+63:i] := MEM[addr+63:addr]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VGATHERQPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_i64gather_ps",
+    "sig": "__m128 _mm256_i64gather_ps(float const* base_addr, __m256i vindex, const int scale)",
+    "detail": "(float const*, __m256i, const int) → __m128",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\". \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*64\n\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\tdst[i+31:i] := MEM[addr+31:addr]\nENDFOR\ndst[MAX:128] := 0",
+    "instruction": "VGATHERQPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_inserti128_si256",
+    "sig": "__m256i _mm256_inserti128_si256(__m256i a, __m128i b, const int imm8)",
+    "detail": "(__m256i, __m128i, const int) → __m256i",
+    "description": "Copy \"a\" to \"dst\", then insert 128 bits (composed of integer data) from \"b\" into \"dst\" at the location specified by \"imm8\".",
+    "operation": "dst[255:0] := a[255:0]\nCASE (imm8[0]) OF\n0: dst[127:0] := b[127:0]\n1: dst[255:128] := b[127:0]\nESAC\ndst[MAX:256] := 0",
+    "instruction": "VINSERTI128",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_madd_epi16",
+    "sig": "__m256i _mm256_madd_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply packed signed 16-bit integers in \"a\" and \"b\", producing intermediate signed 32-bit integers. Horizontally add adjacent pairs of intermediate 32-bit integers, and pack the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := SignExtend32(a[i+31:i+16]*b[i+31:i+16]) + SignExtend32(a[i+15:i]*b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMADDWD",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_maddubs_epi16",
+    "sig": "__m256i _mm256_maddubs_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Vertically multiply each unsigned 8-bit integer from \"a\" with the corresponding signed 8-bit integer from \"b\", producing intermediate signed 16-bit integers. Horizontally add adjacent pairs of intermediate signed 16-bit integers, and pack the saturated results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := Saturate16( a[i+15:i+8]*b[i+15:i+8] + a[i+7:i]*b[i+7:i] )\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMADDUBSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i32gather_epi32",
+    "sig": "__m256i _mm256_mask_i32gather_epi32(__m256i src, int const* base_addr, __m256i vindex, __m256i mask, const int scale)",
+    "detail": "(__m256i, int const*, __m256i, __m256i, const int) → __m256i",
+    "description": "Gather 32-bit integers from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tm := j*32\n\tIF mask[i+31]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:256] := 0\ndst[MAX:256] := 0",
+    "instruction": "VPGATHERDD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i32gather_epi64",
+    "sig": "__m256i _mm256_mask_i32gather_epi64(__m256i src, __int64 const* base_addr, __m128i vindex, __m256i mask, const int scale)",
+    "detail": "(__m256i, __int64 const*, __m128i, __m256i, const int) → __m256i",
+    "description": "Gather 64-bit integers from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*32\n\tIF mask[i+63]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:256] := 0\ndst[MAX:256] := 0",
+    "instruction": "VPGATHERDQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i32gather_pd",
+    "sig": "__m256d _mm256_mask_i32gather_pd(__m256d src, double const* base_addr, __m128i vindex, __m256d mask, const int scale)",
+    "detail": "(__m256d, double const*, __m128i, __m256d, const int) → __m256d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 32-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*32\n\tIF mask[i+63]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:256] := 0\ndst[MAX:256] := 0",
+    "instruction": "VGATHERDPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i32gather_ps",
+    "sig": "__m256 _mm256_mask_i32gather_ps(__m256 src, float const* base_addr, __m256i vindex, __m256 mask, const int scale)",
+    "detail": "(__m256, float const*, __m256i, __m256, const int) → __m256",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 32-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 32-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tm := j*32\n\tIF mask[i+31]\n\t\taddr := base_addr + SignExtend64(vindex[m+31:m]) * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:256] := 0\ndst[MAX:256] := 0",
+    "instruction": "VGATHERDPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i64gather_epi32",
+    "sig": "__m128i _mm256_mask_i64gather_epi32(__m128i src, int const* base_addr, __m256i vindex, __m128i mask, const int scale)",
+    "detail": "(__m128i, int const*, __m256i, __m128i, const int) → __m128i",
+    "description": "Gather 32-bit integers from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*64\n\tIF mask[i+31]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VPGATHERQD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i64gather_epi64",
+    "sig": "__m256i _mm256_mask_i64gather_epi64(__m256i src, __int64 const* base_addr, __m256i vindex, __m256i mask, const int scale)",
+    "detail": "(__m256i, __int64 const*, __m256i, __m256i, const int) → __m256i",
+    "description": "Gather 64-bit integers from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*64\n\tIF mask[i+63]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:256] := 0\ndst[MAX:256] := 0",
+    "instruction": "VPGATHERQQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i64gather_pd",
+    "sig": "__m256d _mm256_mask_i64gather_pd(__m256d src, double const* base_addr, __m256i vindex, __m256d mask, const int scale)",
+    "detail": "(__m256d, double const*, __m256i, __m256d, const int) → __m256d",
+    "description": "Gather double-precision (64-bit) floating-point elements from memory using 64-bit indices. 64-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tm := j*64\n\tIF mask[i+63]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+63:i] := MEM[addr+63:addr]\n\tELSE\n\t\tdst[i+63:i] := src[i+63:i]\n\tFI\nENDFOR\nmask[MAX:256] := 0\ndst[MAX:256] := 0",
+    "instruction": "VGATHERQPD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mask_i64gather_ps",
+    "sig": "__m128 _mm256_mask_i64gather_ps(__m128 src, float const* base_addr, __m256i vindex, __m128 mask, const int scale)",
+    "detail": "(__m128, float const*, __m256i, __m128, const int) → __m128",
+    "description": "Gather single-precision (32-bit) floating-point elements from memory using 64-bit indices. 32-bit elements are loaded from addresses starting at \"base_addr\" and offset by each 64-bit element in \"vindex\" (each index is scaled by the factor in \"scale\"). Gathered elements are merged into \"dst\" using \"mask\" (elements are copied from \"src\" when the highest bit is not set in the corresponding element). \"scale\" should be 1, 2, 4 or 8.",
+    "operation": "FOR j := 0 to 3\n\ti := j*32\n\tm := j*64\n\tIF mask[i+31]\n\t\taddr := base_addr + vindex[m+63:m] * ZeroExtend64(scale) * 8\n\t\tdst[i+31:i] := MEM[addr+31:addr]\n\tELSE\n\t\tdst[i+31:i] := src[i+31:i]\n\tFI\nENDFOR\nmask[MAX:128] := 0\ndst[MAX:128] := 0",
+    "instruction": "VGATHERQPS",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_maskload_epi32",
+    "sig": "__m256i _mm256_maskload_epi32(int const* mem_addr, __m256i mask)",
+    "detail": "(int const*, __m256i) → __m256i",
+    "description": "Load packed 32-bit integers from memory into \"dst\" using \"mask\" (elements are zeroed out when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF mask[i+31]\n\t\tdst[i+31:i] := MEM[mem_addr+i+31:mem_addr+i]\n\tELSE\n\t\tdst[i+31:i] := 0\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMASKMOVD",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_maskload_epi64",
+    "sig": "__m256i _mm256_maskload_epi64(__int64 const* mem_addr, __m256i mask)",
+    "detail": "(__int64 const*, __m256i) → __m256i",
+    "description": "Load packed 64-bit integers from memory into \"dst\" using \"mask\" (elements are zeroed out when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF mask[i+63]\n\t\tdst[i+63:i] := MEM[mem_addr+i+63:mem_addr+i]\n\tELSE\n\t\tdst[i+63:i] := 0\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMASKMOVQ",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_maskstore_epi32",
+    "sig": "void _mm256_maskstore_epi32(int* mem_addr, __m256i mask, __m256i a)",
+    "detail": "(int*, __m256i, __m256i) → void",
+    "description": "Store packed 32-bit integers from \"a\" into memory using \"mask\" (elements are not stored when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF mask[i+31]\n\t\tMEM[mem_addr+i+31:mem_addr+i] := a[i+31:i]\n\tFI\nENDFOR",
+    "instruction": "VPMASKMOVD",
+    "category": "Store",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_maskstore_epi64",
+    "sig": "void _mm256_maskstore_epi64(__int64* mem_addr, __m256i mask, __m256i a)",
+    "detail": "(__int64*, __m256i, __m256i) → void",
+    "description": "Store packed 64-bit integers from \"a\" into memory using \"mask\" (elements are not stored when the highest bit is not set in the corresponding element).",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF mask[i+63]\n\t\tMEM[mem_addr+i+63:mem_addr+i] := a[i+63:i]\n\tFI\nENDFOR",
+    "instruction": "VPMASKMOVQ",
+    "category": "Store",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_max_epi16",
+    "sig": "__m256i _mm256_max_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 16-bit integers in \"a\" and \"b\", and store packed maximum values in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := MAX(a[i+15:i], b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMAXSW",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_max_epi32",
+    "sig": "__m256i _mm256_max_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 32-bit integers in \"a\" and \"b\", and store packed maximum values in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := MAX(a[i+31:i], b[i+31:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMAXSD",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_max_epi8",
+    "sig": "__m256i _mm256_max_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 8-bit integers in \"a\" and \"b\", and store packed maximum values in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := MAX(a[i+7:i], b[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMAXSB",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_max_epu16",
+    "sig": "__m256i _mm256_max_epu16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed unsigned 16-bit integers in \"a\" and \"b\", and store packed maximum values in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := MAX(a[i+15:i], b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMAXUW",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_max_epu32",
+    "sig": "__m256i _mm256_max_epu32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed unsigned 32-bit integers in \"a\" and \"b\", and store packed maximum values in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := MAX(a[i+31:i], b[i+31:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMAXUD",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_max_epu8",
+    "sig": "__m256i _mm256_max_epu8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed unsigned 8-bit integers in \"a\" and \"b\", and store packed maximum values in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := MAX(a[i+7:i], b[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMAXUB",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_min_epi16",
+    "sig": "__m256i _mm256_min_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 16-bit integers in \"a\" and \"b\", and store packed minimum values in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := MIN(a[i+15:i], b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMINSW",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_min_epi32",
+    "sig": "__m256i _mm256_min_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 32-bit integers in \"a\" and \"b\", and store packed minimum values in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := MIN(a[i+31:i], b[i+31:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMINSD",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_min_epi8",
+    "sig": "__m256i _mm256_min_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed signed 8-bit integers in \"a\" and \"b\", and store packed minimum values in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := MIN(a[i+7:i], b[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMINSB",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_min_epu16",
+    "sig": "__m256i _mm256_min_epu16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed unsigned 16-bit integers in \"a\" and \"b\", and store packed minimum values in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := MIN(a[i+15:i], b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMINUW",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_min_epu32",
+    "sig": "__m256i _mm256_min_epu32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed unsigned 32-bit integers in \"a\" and \"b\", and store packed minimum values in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := MIN(a[i+31:i], b[i+31:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMINUD",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_min_epu8",
+    "sig": "__m256i _mm256_min_epu8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compare packed unsigned 8-bit integers in \"a\" and \"b\", and store packed minimum values in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := MIN(a[i+7:i], b[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMINUB",
+    "category": "Special Math Functions",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_movemask_epi8",
+    "sig": "int _mm256_movemask_epi8(__m256i a)",
+    "detail": "(__m256i) → int",
+    "description": "Create mask from the most significant bit of each 8-bit element in \"a\", and store the result in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[j] := a[i+7]\nENDFOR",
+    "instruction": "VPMOVMSKB",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mpsadbw_epu8",
+    "sig": "__m256i _mm256_mpsadbw_epu8(__m256i a, __m256i b, const int imm8)",
+    "detail": "(__m256i, __m256i, const int) → __m256i",
+    "description": "Compute the sum of absolute differences (SADs) of quadruplets of unsigned 8-bit integers in \"a\" compared to those in \"b\", and store the 16-bit results in \"dst\". Eight SADs are performed for each 128-bit lane using one quadruplet from \"b\" and eight quadruplets from \"a\". One quadruplet is selected from \"b\" starting at on the offset specified in \"imm8\". Eight quadruplets are formed from sequential 8-bit integers selected from \"a\" starting at the offset specified in \"imm8\".",
+    "operation": "DEFINE MPSADBW(a[127:0], b[127:0], imm8[2:0]) {\n\ta_offset := imm8[2]*32\n\tb_offset := imm8[1:0]*32\n\tFOR j := 0 to 7\n\t\ti := j*8\n\t\tk := a_offset+i\n\t\tl := b_offset\n\t\ttmp[i*2+15:i*2] := ABS(Signed(a[k+7:k] - b[l+7:l])) + ABS(Signed(a[k+15:k+8] - b[l+15:l+8])) + \\\n\t\t                   ABS(Signed(a[k+23:k+16] - b[l+23:l+16])) + ABS(Signed(a[k+31:k+24] - b[l+31:l+24]))\n\tENDFOR\n\tRETURN tmp[127:0]\n}\ndst[127:0] := MPSADBW(a[127:0], b[127:0], imm8[2:0])\ndst[255:128] := MPSADBW(a[255:128], b[255:128], imm8[5:3])\ndst[MAX:256] := 0",
+    "instruction": "VMPSADBW",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mul_epi32",
+    "sig": "__m256i _mm256_mul_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply the low signed 32-bit integers from each packed 64-bit element in \"a\" and \"b\", and store the signed 64-bit results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := SignExtend64(a[i+31:i]) * SignExtend64(b[i+31:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULDQ",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mul_epu32",
+    "sig": "__m256i _mm256_mul_epu32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply the low unsigned 32-bit integers from each packed 64-bit element in \"a\" and \"b\", and store the unsigned 64-bit results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := a[i+31:i] * b[i+31:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULUDQ",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mulhi_epi16",
+    "sig": "__m256i _mm256_mulhi_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply the packed signed 16-bit integers in \"a\" and \"b\", producing intermediate 32-bit integers, and store the high 16 bits of the intermediate integers in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\ttmp[31:0] := SignExtend32(a[i+15:i]) * SignExtend32(b[i+15:i])\n\tdst[i+15:i] := tmp[31:16]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULHW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mulhi_epu16",
+    "sig": "__m256i _mm256_mulhi_epu16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply the packed unsigned 16-bit integers in \"a\" and \"b\", producing intermediate 32-bit integers, and store the high 16 bits of the intermediate integers in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\ttmp[31:0] := a[i+15:i] * b[i+15:i]\n\tdst[i+15:i] := tmp[31:16]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULHUW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mulhrs_epi16",
+    "sig": "__m256i _mm256_mulhrs_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply packed signed 16-bit integers in \"a\" and \"b\", producing intermediate signed 32-bit integers. Truncate each intermediate integer to the 18 most significant bits, round by adding 1, and store bits [16:1] to \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\ttmp[31:0] := ((SignExtend32(a[i+15:i]) * SignExtend32(b[i+15:i])) >> 14) + 1\n\tdst[i+15:i] := tmp[16:1]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULHRSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mullo_epi16",
+    "sig": "__m256i _mm256_mullo_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply the packed signed 16-bit integers in \"a\" and \"b\", producing intermediate 32-bit integers, and store the low 16 bits of the intermediate integers in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\ttmp[31:0] := SignExtend32(a[i+15:i]) * SignExtend32(b[i+15:i])\n\tdst[i+15:i] := tmp[15:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULLW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_mullo_epi32",
+    "sig": "__m256i _mm256_mullo_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Multiply the packed signed 32-bit integers in \"a\" and \"b\", producing intermediate 64-bit integers, and store the low 32 bits of the intermediate integers in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\ttmp[63:0] := a[i+31:i] * b[i+31:i]\n\tdst[i+31:i] := tmp[31:0]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPMULLD",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_or_si256",
+    "sig": "__m256i _mm256_or_si256(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compute the bitwise OR of 256 bits (representing integer data) in \"a\" and \"b\", and store the result in \"dst\".",
+    "operation": "dst[255:0] := (a[255:0] OR b[255:0])\ndst[MAX:256] := 0",
+    "instruction": "VPOR",
+    "category": "Logical",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_packs_epi16",
+    "sig": "__m256i _mm256_packs_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Convert packed signed 16-bit integers from \"a\" and \"b\" to packed 8-bit integers using signed saturation, and store the results in \"dst\".",
+    "operation": "dst[7:0] := Saturate8(a[15:0])\ndst[15:8] := Saturate8(a[31:16])\ndst[23:16] := Saturate8(a[47:32])\ndst[31:24] := Saturate8(a[63:48])\ndst[39:32] := Saturate8(a[79:64])\ndst[47:40] := Saturate8(a[95:80])\ndst[55:48] := Saturate8(a[111:96])\ndst[63:56] := Saturate8(a[127:112])\ndst[71:64] := Saturate8(b[15:0])\ndst[79:72] := Saturate8(b[31:16])\ndst[87:80] := Saturate8(b[47:32])\ndst[95:88] := Saturate8(b[63:48])\ndst[103:96] := Saturate8(b[79:64])\ndst[111:104] := Saturate8(b[95:80])\ndst[119:112] := Saturate8(b[111:96])\ndst[127:120] := Saturate8(b[127:112])\ndst[135:128] := Saturate8(a[143:128])\ndst[143:136] := Saturate8(a[159:144])\ndst[151:144] := Saturate8(a[175:160])\ndst[159:152] := Saturate8(a[191:176])\ndst[167:160] := Saturate8(a[207:192])\ndst[175:168] := Saturate8(a[223:208])\ndst[183:176] := Saturate8(a[239:224])\ndst[191:184] := Saturate8(a[255:240])\ndst[199:192] := Saturate8(b[143:128])\ndst[207:200] := Saturate8(b[159:144])\ndst[215:208] := Saturate8(b[175:160])\ndst[223:216] := Saturate8(b[191:176])\ndst[231:224] := Saturate8(b[207:192])\ndst[239:232] := Saturate8(b[223:208])\ndst[247:240] := Saturate8(b[239:224])\ndst[255:248] := Saturate8(b[255:240])\ndst[MAX:256] := 0",
+    "instruction": "VPACKSSWB",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_packs_epi32",
+    "sig": "__m256i _mm256_packs_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Convert packed signed 32-bit integers from \"a\" and \"b\" to packed 16-bit integers using signed saturation, and store the results in \"dst\".",
+    "operation": "dst[15:0] := Saturate16(a[31:0])\ndst[31:16] := Saturate16(a[63:32])\ndst[47:32] := Saturate16(a[95:64])\ndst[63:48] := Saturate16(a[127:96])\ndst[79:64] := Saturate16(b[31:0])\ndst[95:80] := Saturate16(b[63:32])\ndst[111:96] := Saturate16(b[95:64])\ndst[127:112] := Saturate16(b[127:96])\ndst[143:128] := Saturate16(a[159:128])\ndst[159:144] := Saturate16(a[191:160])\ndst[175:160] := Saturate16(a[223:192])\ndst[191:176] := Saturate16(a[255:224])\ndst[207:192] := Saturate16(b[159:128])\ndst[223:208] := Saturate16(b[191:160])\ndst[239:224] := Saturate16(b[223:192])\ndst[255:240] := Saturate16(b[255:224])\ndst[MAX:256] := 0",
+    "instruction": "VPACKSSDW",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_packus_epi16",
+    "sig": "__m256i _mm256_packus_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Convert packed signed 16-bit integers from \"a\" and \"b\" to packed 8-bit integers using unsigned saturation, and store the results in \"dst\".",
+    "operation": "dst[7:0] := SaturateU8(a[15:0])\ndst[15:8] := SaturateU8(a[31:16])\ndst[23:16] := SaturateU8(a[47:32])\ndst[31:24] := SaturateU8(a[63:48])\ndst[39:32] := SaturateU8(a[79:64])\ndst[47:40] := SaturateU8(a[95:80])\ndst[55:48] := SaturateU8(a[111:96])\ndst[63:56] := SaturateU8(a[127:112])\ndst[71:64] := SaturateU8(b[15:0])\ndst[79:72] := SaturateU8(b[31:16])\ndst[87:80] := SaturateU8(b[47:32])\ndst[95:88] := SaturateU8(b[63:48])\ndst[103:96] := SaturateU8(b[79:64])\ndst[111:104] := SaturateU8(b[95:80])\ndst[119:112] := SaturateU8(b[111:96])\ndst[127:120] := SaturateU8(b[127:112])\ndst[135:128] := SaturateU8(a[143:128])\ndst[143:136] := SaturateU8(a[159:144])\ndst[151:144] := SaturateU8(a[175:160])\ndst[159:152] := SaturateU8(a[191:176])\ndst[167:160] := SaturateU8(a[207:192])\ndst[175:168] := SaturateU8(a[223:208])\ndst[183:176] := SaturateU8(a[239:224])\ndst[191:184] := SaturateU8(a[255:240])\ndst[199:192] := SaturateU8(b[143:128])\ndst[207:200] := SaturateU8(b[159:144])\ndst[215:208] := SaturateU8(b[175:160])\ndst[223:216] := SaturateU8(b[191:176])\ndst[231:224] := SaturateU8(b[207:192])\ndst[239:232] := SaturateU8(b[223:208])\ndst[247:240] := SaturateU8(b[239:224])\ndst[255:248] := SaturateU8(b[255:240])\ndst[MAX:256] := 0",
+    "instruction": "VPACKUSWB",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_packus_epi32",
+    "sig": "__m256i _mm256_packus_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Convert packed signed 32-bit integers from \"a\" and \"b\" to packed 16-bit integers using unsigned saturation, and store the results in \"dst\".",
+    "operation": "dst[15:0] := SaturateU16(a[31:0])\ndst[31:16] := SaturateU16(a[63:32])\ndst[47:32] := SaturateU16(a[95:64])\ndst[63:48] := SaturateU16(a[127:96])\ndst[79:64] := SaturateU16(b[31:0])\ndst[95:80] := SaturateU16(b[63:32])\ndst[111:96] := SaturateU16(b[95:64])\ndst[127:112] := SaturateU16(b[127:96])\ndst[143:128] := SaturateU16(a[159:128])\ndst[159:144] := SaturateU16(a[191:160])\ndst[175:160] := SaturateU16(a[223:192])\ndst[191:176] := SaturateU16(a[255:224])\ndst[207:192] := SaturateU16(b[159:128])\ndst[223:208] := SaturateU16(b[191:160])\ndst[239:224] := SaturateU16(b[223:192])\ndst[255:240] := SaturateU16(b[255:224])\ndst[MAX:256] := 0",
+    "instruction": "VPACKUSDW",
+    "category": "Miscellaneous",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_permute2x128_si256",
+    "sig": "__m256i _mm256_permute2x128_si256(__m256i a, __m256i b, const int imm8)",
+    "detail": "(__m256i, __m256i, const int) → __m256i",
+    "description": "Shuffle 128-bits (composed of integer data) selected by \"imm8\" from \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE SELECT4(src1, src2, control) {\n\tCASE(control[1:0]) OF\n\t0:\ttmp[127:0] := src1[127:0]\n\t1:\ttmp[127:0] := src1[255:128]\n\t2:\ttmp[127:0] := src2[127:0]\n\t3:\ttmp[127:0] := src2[255:128]\n\tESAC\n\tIF control[3]\n\t\ttmp[127:0] := 0\n\tFI\n\tRETURN tmp[127:0]\n}\ndst[127:0] := SELECT4(a[255:0], b[255:0], imm8[3:0])\ndst[255:128] := SELECT4(a[255:0], b[255:0], imm8[7:4])\ndst[MAX:256] := 0",
+    "instruction": "VPERM2I128",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_permute4x64_epi64",
+    "sig": "__m256i _mm256_permute4x64_epi64(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shuffle 64-bit integers in \"a\" across lanes using the control in \"imm8\", and store the results in \"dst\".",
+    "operation": "DEFINE SELECT4(src, control) {\n\tCASE(control[1:0]) OF\n\t0:\ttmp[63:0] := src[63:0]\n\t1:\ttmp[63:0] := src[127:64]\n\t2:\ttmp[63:0] := src[191:128]\n\t3:\ttmp[63:0] := src[255:192]\n\tESAC\n\tRETURN tmp[63:0]\n}\ndst[63:0] := SELECT4(a[255:0], imm8[1:0])\ndst[127:64] := SELECT4(a[255:0], imm8[3:2])\ndst[191:128] := SELECT4(a[255:0], imm8[5:4])\ndst[255:192] := SELECT4(a[255:0], imm8[7:6])\ndst[MAX:256] := 0",
+    "instruction": "VPERMQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_permute4x64_pd",
+    "sig": "__m256d _mm256_permute4x64_pd(__m256d a, const int imm8)",
+    "detail": "(__m256d, const int) → __m256d",
+    "description": "Shuffle double-precision (64-bit) floating-point elements in \"a\" across lanes using the control in \"imm8\", and store the results in \"dst\".",
+    "operation": "DEFINE SELECT4(src, control) {\n\tCASE(control[1:0]) OF\n\t0:\ttmp[63:0] := src[63:0]\n\t1:\ttmp[63:0] := src[127:64]\n\t2:\ttmp[63:0] := src[191:128]\n\t3:\ttmp[63:0] := src[255:192]\n\tESAC\n\tRETURN tmp[63:0]\n}\ndst[63:0] := SELECT4(a[255:0], imm8[1:0])\ndst[127:64] := SELECT4(a[255:0], imm8[3:2])\ndst[191:128] := SELECT4(a[255:0], imm8[5:4])\ndst[255:192] := SELECT4(a[255:0], imm8[7:6])\ndst[MAX:256] := 0",
+    "instruction": "VPERMPD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_permutevar8x32_epi32",
+    "sig": "__m256i _mm256_permutevar8x32_epi32(__m256i a, __m256i idx)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shuffle 32-bit integers in \"a\" across lanes using the corresponding index in \"idx\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tid := idx[i+2:i]*32\n\tdst[i+31:i] := a[id+31:id]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPERMD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_permutevar8x32_ps",
+    "sig": "__m256 _mm256_permutevar8x32_ps(__m256 a, __m256i idx)",
+    "detail": "(__m256, __m256i) → __m256",
+    "description": "Shuffle single-precision (32-bit) floating-point elements in \"a\" across lanes using the corresponding index in \"idx\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tid := idx[i+2:i]*32\n\tdst[i+31:i] := a[id+31:id]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPERMPS",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sad_epu8",
+    "sig": "__m256i _mm256_sad_epu8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compute the absolute differences of packed unsigned 8-bit integers in \"a\" and \"b\", then horizontally sum each consecutive 8 differences to produce four unsigned 16-bit integers, and pack these unsigned 16-bit integers in the low 16 bits of 64-bit elements in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\ttmp[i+7:i] := ABS(a[i+7:i] - b[i+7:i])\nENDFOR\nFOR j := 0 to 3\n\ti := j*64\n\tdst[i+15:i] := tmp[i+7:i] + tmp[i+15:i+8] + tmp[i+23:i+16] + tmp[i+31:i+24] + \\\n\t               tmp[i+39:i+32] + tmp[i+47:i+40] + tmp[i+55:i+48] + tmp[i+63:i+56]\n\tdst[i+63:i+16] := 0\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSADBW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_shuffle_epi32",
+    "sig": "__m256i _mm256_shuffle_epi32(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shuffle 32-bit integers in \"a\" within 128-bit lanes using the control in \"imm8\", and store the results in \"dst\".",
+    "operation": "DEFINE SELECT4(src, control) {\n\tCASE(control[1:0]) OF\n\t0:\ttmp[31:0] := src[31:0]\n\t1:\ttmp[31:0] := src[63:32]\n\t2:\ttmp[31:0] := src[95:64]\n\t3:\ttmp[31:0] := src[127:96]\n\tESAC\n\tRETURN tmp[31:0]\n}\ndst[31:0] := SELECT4(a[127:0], imm8[1:0])\ndst[63:32] := SELECT4(a[127:0], imm8[3:2])\ndst[95:64] := SELECT4(a[127:0], imm8[5:4])\ndst[127:96] := SELECT4(a[127:0], imm8[7:6])\ndst[159:128] := SELECT4(a[255:128], imm8[1:0])\ndst[191:160] := SELECT4(a[255:128], imm8[3:2])\ndst[223:192] := SELECT4(a[255:128], imm8[5:4])\ndst[255:224] := SELECT4(a[255:128], imm8[7:6])\ndst[MAX:256] := 0",
+    "instruction": "VPSHUFD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_shuffle_epi8",
+    "sig": "__m256i _mm256_shuffle_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shuffle 8-bit integers in \"a\" within 128-bit lanes according to shuffle control mask in the corresponding 8-bit element of \"b\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*8\n\tIF b[i+7] == 1\n\t\tdst[i+7:i] := 0\n\tELSE\n\t\tindex[3:0] := b[i+3:i]\n\t\tdst[i+7:i] := a[index*8+7:index*8]\n\tFI\n\tIF b[128+i+7] == 1\n\t\tdst[128+i+7:128+i] := 0\n\tELSE\n\t\tindex[3:0] := b[128+i+3:128+i]\n\t\tdst[128+i+7:128+i] := a[128+index*8+7:128+index*8]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSHUFB",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_shufflehi_epi16",
+    "sig": "__m256i _mm256_shufflehi_epi16(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shuffle 16-bit integers in the high 64 bits of 128-bit lanes of \"a\" using the control in \"imm8\". Store the results in the high 64 bits of 128-bit lanes of \"dst\", with the low 64 bits of 128-bit lanes being copied from from \"a\" to \"dst\".",
+    "operation": "dst[63:0] := a[63:0]\ndst[79:64] := (a >> (imm8[1:0] * 16))[79:64]\ndst[95:80] := (a >> (imm8[3:2] * 16))[79:64]\ndst[111:96] := (a >> (imm8[5:4] * 16))[79:64]\ndst[127:112] := (a >> (imm8[7:6] * 16))[79:64]\ndst[191:128] := a[191:128]\ndst[207:192] := (a >> (imm8[1:0] * 16))[207:192]\ndst[223:208] := (a >> (imm8[3:2] * 16))[207:192]\ndst[239:224] := (a >> (imm8[5:4] * 16))[207:192]\ndst[255:240] := (a >> (imm8[7:6] * 16))[207:192]\ndst[MAX:256] := 0",
+    "instruction": "VPSHUFHW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_shufflelo_epi16",
+    "sig": "__m256i _mm256_shufflelo_epi16(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shuffle 16-bit integers in the low 64 bits of 128-bit lanes of \"a\" using the control in \"imm8\". Store the results in the low 64 bits of 128-bit lanes of \"dst\", with the high 64 bits of 128-bit lanes being copied from from \"a\" to \"dst\".",
+    "operation": "dst[15:0] := (a >> (imm8[1:0] * 16))[15:0]\ndst[31:16] := (a >> (imm8[3:2] * 16))[15:0]\ndst[47:32] := (a >> (imm8[5:4] * 16))[15:0]\ndst[63:48] := (a >> (imm8[7:6] * 16))[15:0]\ndst[127:64] := a[127:64]\ndst[143:128] := (a >> (imm8[1:0] * 16))[143:128]\ndst[159:144] := (a >> (imm8[3:2] * 16))[143:128]\ndst[175:160] := (a >> (imm8[5:4] * 16))[143:128]\ndst[191:176] := (a >> (imm8[7:6] * 16))[143:128]\ndst[255:192] := a[255:192]\ndst[MAX:256] := 0",
+    "instruction": "VPSHUFLW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sign_epi16",
+    "sig": "__m256i _mm256_sign_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Negate packed signed 16-bit integers in \"a\" when the corresponding signed 16-bit integer in \"b\" is negative, and store the results in \"dst\". Element in \"dst\" are zeroed out when the corresponding element in \"b\" is zero.",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF b[i+15:i] < 0\n\t\tdst[i+15:i] := -(a[i+15:i])\n\tELSE IF b[i+15:i] == 0\n\t\tdst[i+15:i] := 0\n\tELSE\n\t\tdst[i+15:i] := a[i+15:i]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSIGNW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sign_epi32",
+    "sig": "__m256i _mm256_sign_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Negate packed signed 32-bit integers in \"a\" when the corresponding signed 32-bit integer in \"b\" is negative, and store the results in \"dst\". Element in \"dst\" are zeroed out when the corresponding element in \"b\" is zero.",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF b[i+31:i] < 0\n\t\tdst[i+31:i] := -(a[i+31:i])\n\tELSE IF b[i+31:i] == 0\n\t\tdst[i+31:i] := 0\n\tELSE\n\t\tdst[i+31:i] := a[i+31:i]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSIGND",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sign_epi8",
+    "sig": "__m256i _mm256_sign_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Negate packed signed 8-bit integers in \"a\" when the corresponding signed 8-bit integer in \"b\" is negative, and store the results in \"dst\". Element in \"dst\" are zeroed out when the corresponding element in \"b\" is zero.",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tIF b[i+7:i] < 0\n\t\tdst[i+7:i] := -(a[i+7:i])\n\tELSE IF b[i+7:i] == 0\n\t\tdst[i+7:i] := 0\n\tELSE\n\t\tdst[i+7:i] := a[i+7:i]\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSIGNB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sll_epi16",
+    "sig": "__m256i _mm256_sll_epi16(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 16-bit integers in \"a\" left by \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF count[63:0] > 15\n\t\tdst[i+15:i] := 0\n\tELSE\n\t\tdst[i+15:i] := ZeroExtend16(a[i+15:i] << count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLW",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sll_epi32",
+    "sig": "__m256i _mm256_sll_epi32(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" left by \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF count[63:0] > 31\n\t\tdst[i+31:i] := 0\n\tELSE\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] << count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sll_epi64",
+    "sig": "__m256i _mm256_sll_epi64(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 64-bit integers in \"a\" left by \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF count[63:0] > 63\n\t\tdst[i+63:i] := 0\n\tELSE\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] << count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_slli_epi16",
+    "sig": "__m256i _mm256_slli_epi16(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 16-bit integers in \"a\" left by \"imm8\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF imm8[7:0] > 15\n\t\tdst[i+15:i] := 0\n\tELSE\n\t\tdst[i+15:i] := ZeroExtend16(a[i+15:i] << imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLW",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_slli_epi32",
+    "sig": "__m256i _mm256_slli_epi32(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" left by \"imm8\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF imm8[7:0] > 31\n\t\tdst[i+31:i] := 0\n\tELSE\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] << imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_slli_epi64",
+    "sig": "__m256i _mm256_slli_epi64(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 64-bit integers in \"a\" left by \"imm8\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF imm8[7:0] > 63\n\t\tdst[i+63:i] := 0\n\tELSE\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] << imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_slli_si256",
+    "sig": "__m256i _mm256_slli_si256(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shift 128-bit lanes in \"a\" left by \"imm8\" bytes while shifting in zeros, and store the results in \"dst\".",
+    "operation": "tmp := imm8[7:0]\nIF tmp > 15\n\ttmp := 16\nFI\ndst[127:0] := a[127:0] << (tmp*8)\ndst[255:128] := a[255:128] << (tmp*8)\ndst[MAX:256] := 0",
+    "instruction": "VPSLLDQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sllv_epi32",
+    "sig": "__m256i _mm256_sllv_epi32(__m256i a, __m256i count)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" left by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF count[i+31:i] < 32\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] << count[i+31:i])\n\tELSE\n\t\tdst[i+31:i] := 0\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLVD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sllv_epi64",
+    "sig": "__m256i _mm256_sllv_epi64(__m256i a, __m256i count)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shift packed 64-bit integers in \"a\" left by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF count[i+63:i] < 64\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] << count[i+63:i])\n\tELSE\n\t\tdst[i+63:i] := 0\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSLLVQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sra_epi16",
+    "sig": "__m256i _mm256_sra_epi16(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 16-bit integers in \"a\" right by \"count\" while shifting in sign bits, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF count[63:0] > 15\n\t\tdst[i+15:i] := (a[i+15] ? 0xFFFF : 0x0)\n\tELSE\n\t\tdst[i+15:i] := SignExtend16(a[i+15:i] >> count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRAW",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sra_epi32",
+    "sig": "__m256i _mm256_sra_epi32(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" right by \"count\" while shifting in sign bits, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF count[63:0] > 31\n\t\tdst[i+31:i] := (a[i+31] ? 0xFFFFFFFF : 0x0)\n\tELSE\n\t\tdst[i+31:i] := SignExtend32(a[i+31:i] >> count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRAD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srai_epi16",
+    "sig": "__m256i _mm256_srai_epi16(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 16-bit integers in \"a\" right by \"imm8\" while shifting in sign bits, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF imm8[7:0] > 15\n\t\tdst[i+15:i] := (a[i+15] ? 0xFFFF : 0x0)\n\tELSE\n\t\tdst[i+15:i] := SignExtend16(a[i+15:i] >> imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRAW",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srai_epi32",
+    "sig": "__m256i _mm256_srai_epi32(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" right by \"imm8\" while shifting in sign bits, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF imm8[7:0] > 31\n\t\tdst[i+31:i] := (a[i+31] ? 0xFFFFFFFF : 0x0)\n\tELSE\n\t\tdst[i+31:i] := SignExtend32(a[i+31:i] >> imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRAD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srav_epi32",
+    "sig": "__m256i _mm256_srav_epi32(__m256i a, __m256i count)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" right by the amount specified by the corresponding element in \"count\" while shifting in sign bits, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF count[i+31:i] < 32\n\t\tdst[i+31:i] := SignExtend32(a[i+31:i] >> count[i+31:i])\n\tELSE\n\t\tdst[i+31:i] := (a[i+31] ? 0xFFFFFFFF : 0)\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRAVD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srl_epi16",
+    "sig": "__m256i _mm256_srl_epi16(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 16-bit integers in \"a\" right by \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF count[63:0] > 15\n\t\tdst[i+15:i] := 0\n\tELSE\n\t\tdst[i+15:i] := ZeroExtend16(a[i+15:i] >> count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLW",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srl_epi32",
+    "sig": "__m256i _mm256_srl_epi32(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" right by \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF count[63:0] > 31\n\t\tdst[i+31:i] := 0\n\tELSE\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] >> count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srl_epi64",
+    "sig": "__m256i _mm256_srl_epi64(__m256i a, __m128i count)",
+    "detail": "(__m256i, __m128i) → __m256i",
+    "description": "Shift packed 64-bit integers in \"a\" right by \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF count[63:0] > 63\n\t\tdst[i+63:i] := 0\n\tELSE\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] >> count[63:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srli_epi16",
+    "sig": "__m256i _mm256_srli_epi16(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 16-bit integers in \"a\" right by \"imm8\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tIF imm8[7:0] > 15\n\t\tdst[i+15:i] := 0\n\tELSE\n\t\tdst[i+15:i] := ZeroExtend16(a[i+15:i] >> imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLW",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srli_epi32",
+    "sig": "__m256i _mm256_srli_epi32(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" right by \"imm8\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF imm8[7:0] > 31\n\t\tdst[i+31:i] := 0\n\tELSE\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] >> imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srli_epi64",
+    "sig": "__m256i _mm256_srli_epi64(__m256i a, int imm8)",
+    "detail": "(__m256i, int) → __m256i",
+    "description": "Shift packed 64-bit integers in \"a\" right by \"imm8\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF imm8[7:0] > 63\n\t\tdst[i+63:i] := 0\n\tELSE\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] >> imm8[7:0])\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srli_si256",
+    "sig": "__m256i _mm256_srli_si256(__m256i a, const int imm8)",
+    "detail": "(__m256i, const int) → __m256i",
+    "description": "Shift 128-bit lanes in \"a\" right by \"imm8\" bytes while shifting in zeros, and store the results in \"dst\".",
+    "operation": "tmp := imm8[7:0]\nIF tmp > 15\n\ttmp := 16\nFI\ndst[127:0] := a[127:0] >> (tmp*8)\ndst[255:128] := a[255:128] >> (tmp*8)\ndst[MAX:256] := 0",
+    "instruction": "VPSRLDQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srlv_epi32",
+    "sig": "__m256i _mm256_srlv_epi32(__m256i a, __m256i count)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shift packed 32-bit integers in \"a\" right by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tIF count[i+31:i] < 32\n\t\tdst[i+31:i] := ZeroExtend32(a[i+31:i] >> count[i+31:i])\n\tELSE\n\t\tdst[i+31:i] := 0\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLVD",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_srlv_epi64",
+    "sig": "__m256i _mm256_srlv_epi64(__m256i a, __m256i count)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Shift packed 64-bit integers in \"a\" right by the amount specified by the corresponding element in \"count\" while shifting in zeros, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tIF count[i+63:i] < 64\n\t\tdst[i+63:i] := ZeroExtend64(a[i+63:i] >> count[i+63:i])\n\tELSE\n\t\tdst[i+63:i] := 0\n\tFI\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSRLVQ",
+    "category": "Shift",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_stream_load_si256",
+    "sig": "__m256i _mm256_stream_load_si256(void const* mem_addr)",
+    "detail": "(void const*) → __m256i",
+    "description": "Load 256-bits of integer data from memory into \"dst\" using a non-temporal memory hint. \"mem_addr\" must be aligned on a 32-byte boundary or a general-protection exception may be generated.",
+    "operation": "dst[255:0] := MEM[mem_addr+255:mem_addr]\ndst[MAX:256] := 0",
+    "instruction": "VMOVNTDQA",
+    "category": "Load",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sub_epi16",
+    "sig": "__m256i _mm256_sub_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed 16-bit integers in \"b\" from packed 16-bit integers in \"a\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := a[i+15:i] - b[i+15:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sub_epi32",
+    "sig": "__m256i _mm256_sub_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed 32-bit integers in \"b\" from packed 32-bit integers in \"a\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 7\n\ti := j*32\n\tdst[i+31:i] := a[i+31:i] - b[i+31:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBD",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sub_epi64",
+    "sig": "__m256i _mm256_sub_epi64(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed 64-bit integers in \"b\" from packed 64-bit integers in \"a\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 3\n\ti := j*64\n\tdst[i+63:i] := a[i+63:i] - b[i+63:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBQ",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_sub_epi8",
+    "sig": "__m256i _mm256_sub_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed 8-bit integers in \"b\" from packed 8-bit integers in \"a\", and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := a[i+7:i] - b[i+7:i]\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_subs_epi16",
+    "sig": "__m256i _mm256_subs_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed signed 16-bit integers in \"b\" from packed 16-bit integers in \"a\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := Saturate16(a[i+15:i] - b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_subs_epi8",
+    "sig": "__m256i _mm256_subs_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed signed 8-bit integers in \"b\" from packed 8-bit integers in \"a\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := Saturate8(a[i+7:i] - b[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBSB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_subs_epu16",
+    "sig": "__m256i _mm256_subs_epu16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed unsigned 16-bit integers in \"b\" from packed unsigned 16-bit integers in \"a\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 15\n\ti := j*16\n\tdst[i+15:i] := SaturateU16(a[i+15:i] - b[i+15:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBUSW",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_subs_epu8",
+    "sig": "__m256i _mm256_subs_epu8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Subtract packed unsigned 8-bit integers in \"b\" from packed unsigned 8-bit integers in \"a\" using saturation, and store the results in \"dst\".",
+    "operation": "FOR j := 0 to 31\n\ti := j*8\n\tdst[i+7:i] := SaturateU8(a[i+7:i] - b[i+7:i])\nENDFOR\ndst[MAX:256] := 0",
+    "instruction": "VPSUBUSB",
+    "category": "Arithmetic",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpackhi_epi16",
+    "sig": "__m256i _mm256_unpackhi_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 16-bit integers from the high half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_HIGH_WORDS(src1[127:0], src2[127:0]) {\n\tdst[15:0] := src1[79:64]\n\tdst[31:16] := src2[79:64] \n\tdst[47:32] := src1[95:80] \n\tdst[63:48] := src2[95:80] \n\tdst[79:64] := src1[111:96] \n\tdst[95:80] := src2[111:96] \n\tdst[111:96] := src1[127:112] \n\tdst[127:112] := src2[127:112] \n\tRETURN dst[127:0]\n}\ndst[127:0] := INTERLEAVE_HIGH_WORDS(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_HIGH_WORDS(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKHWD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpackhi_epi32",
+    "sig": "__m256i _mm256_unpackhi_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 32-bit integers from the high half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_HIGH_DWORDS(src1[127:0], src2[127:0]) {\n\tdst[31:0] := src1[95:64] \n\tdst[63:32] := src2[95:64] \n\tdst[95:64] := src1[127:96] \n\tdst[127:96] := src2[127:96] \n\tRETURN dst[127:0]\t\n}\ndst[127:0] := INTERLEAVE_HIGH_DWORDS(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_HIGH_DWORDS(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKHDQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpackhi_epi64",
+    "sig": "__m256i _mm256_unpackhi_epi64(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 64-bit integers from the high half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_HIGH_QWORDS(src1[127:0], src2[127:0]) {\n\tdst[63:0] := src1[127:64] \n\tdst[127:64] := src2[127:64] \n\tRETURN dst[127:0]\t\n}\ndst[127:0] := INTERLEAVE_HIGH_QWORDS(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_HIGH_QWORDS(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKHQDQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpackhi_epi8",
+    "sig": "__m256i _mm256_unpackhi_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 8-bit integers from the high half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_HIGH_BYTES(src1[127:0], src2[127:0]) {\n\tdst[7:0] := src1[71:64] \n\tdst[15:8] := src2[71:64] \n\tdst[23:16] := src1[79:72] \n\tdst[31:24] := src2[79:72] \n\tdst[39:32] := src1[87:80] \n\tdst[47:40] := src2[87:80] \n\tdst[55:48] := src1[95:88] \n\tdst[63:56] := src2[95:88] \n\tdst[71:64] := src1[103:96] \n\tdst[79:72] := src2[103:96] \n\tdst[87:80] := src1[111:104] \n\tdst[95:88] := src2[111:104] \n\tdst[103:96] := src1[119:112] \n\tdst[111:104] := src2[119:112] \n\tdst[119:112] := src1[127:120] \n\tdst[127:120] := src2[127:120] \n\tRETURN dst[127:0]\t\n}\ndst[127:0] := INTERLEAVE_HIGH_BYTES(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_HIGH_BYTES(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKHBW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpacklo_epi16",
+    "sig": "__m256i _mm256_unpacklo_epi16(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 16-bit integers from the low half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_WORDS(src1[127:0], src2[127:0]) {\n\tdst[15:0] := src1[15:0] \n\tdst[31:16] := src2[15:0] \n\tdst[47:32] := src1[31:16] \n\tdst[63:48] := src2[31:16] \n\tdst[79:64] := src1[47:32] \n\tdst[95:80] := src2[47:32] \n\tdst[111:96] := src1[63:48] \n\tdst[127:112] := src2[63:48] \n\tRETURN dst[127:0]\t\n}\ndst[127:0] := INTERLEAVE_WORDS(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_WORDS(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKLWD",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpacklo_epi32",
+    "sig": "__m256i _mm256_unpacklo_epi32(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 32-bit integers from the low half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_DWORDS(src1[127:0], src2[127:0]) {\n\tdst[31:0] := src1[31:0] \n\tdst[63:32] := src2[31:0] \n\tdst[95:64] := src1[63:32] \n\tdst[127:96] := src2[63:32] \n\tRETURN dst[127:0]\t\n}\ndst[127:0] := INTERLEAVE_DWORDS(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_DWORDS(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKLDQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpacklo_epi64",
+    "sig": "__m256i _mm256_unpacklo_epi64(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 64-bit integers from the low half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_QWORDS(src1[127:0], src2[127:0]) {\n\tdst[63:0] := src1[63:0] \n\tdst[127:64] := src2[63:0] \n\tRETURN dst[127:0]\n}\ndst[127:0] := INTERLEAVE_QWORDS(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_QWORDS(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKLQDQ",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_unpacklo_epi8",
+    "sig": "__m256i _mm256_unpacklo_epi8(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Unpack and interleave 8-bit integers from the low half of each 128-bit lane in \"a\" and \"b\", and store the results in \"dst\".",
+    "operation": "DEFINE INTERLEAVE_BYTES(src1[127:0], src2[127:0]) {\n\tdst[7:0] := src1[7:0] \n\tdst[15:8] := src2[7:0] \n\tdst[23:16] := src1[15:8] \n\tdst[31:24] := src2[15:8] \n\tdst[39:32] := src1[23:16] \n\tdst[47:40] := src2[23:16] \n\tdst[55:48] := src1[31:24] \n\tdst[63:56] := src2[31:24] \n\tdst[71:64] := src1[39:32]\n\tdst[79:72] := src2[39:32] \n\tdst[87:80] := src1[47:40] \n\tdst[95:88] := src2[47:40] \n\tdst[103:96] := src1[55:48] \n\tdst[111:104] := src2[55:48] \n\tdst[119:112] := src1[63:56] \n\tdst[127:120] := src2[63:56] \n\tRETURN dst[127:0]\n}\ndst[127:0] := INTERLEAVE_BYTES(a[127:0], b[127:0])\ndst[255:128] := INTERLEAVE_BYTES(a[255:128], b[255:128])\ndst[MAX:256] := 0",
+    "instruction": "VPUNPCKLBW",
+    "category": "Swizzle",
+    "header": "immintrin.h"
+  },
+  {
+    "name": "_mm256_xor_si256",
+    "sig": "__m256i _mm256_xor_si256(__m256i a, __m256i b)",
+    "detail": "(__m256i, __m256i) → __m256i",
+    "description": "Compute the bitwise XOR of 256 bits (representing integer data) in \"a\" and \"b\", and store the result in \"dst\".",
+    "operation": "dst[255:0] := (a[255:0] XOR b[255:0])\ndst[MAX:256] := 0",
+    "instruction": "VPXOR",
+    "category": "Logical",
+    "header": "immintrin.h"
+  }
+]

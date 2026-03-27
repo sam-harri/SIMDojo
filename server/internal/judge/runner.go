@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 	"syscall"
 	"time"
 )
@@ -132,10 +131,9 @@ func (r *Runner) executeNsjail(ctx context.Context, binaryPath string, timeout t
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
 			result.ExitCode = exitErr.ExitCode()
-			// nsjail enforces rlimit_as — when exceeded, the child is killed.
-			// This typically manifests as exit code 137 (SIGKILL) or a non-zero exit
-			// with peak memory near/above the limit.
-			if memoryMB > 0 && result.PeakMemoryKB > int64(memoryMB)*1024 {
+			// nsjail enforces rlimit_as at the kernel level.
+			// When exceeded, the child receives SIGKILL (exit code 137).
+			if result.ExitCode == 137 && memoryMB > 0 {
 				result.MemoryExceeded = true
 				return result, nil
 			}
@@ -148,17 +146,11 @@ func (r *Runner) executeNsjail(ctx context.Context, binaryPath string, timeout t
 }
 
 // peakMemoryKB extracts peak RSS from the process's resource usage.
-// On macOS, ru_maxrss is in bytes; on Linux, it's in kilobytes.
+// Linux ru_maxrss is in kilobytes.
 func peakMemoryKB(state *os.ProcessState) int64 {
 	rusage, ok := state.SysUsage().(*syscall.Rusage)
 	if !ok || rusage == nil {
 		return 0
 	}
-	maxrss := rusage.Maxrss
-	if runtime.GOOS == "darwin" {
-		// macOS reports bytes, convert to KB
-		return maxrss / 1024
-	}
-	// Linux reports KB
-	return maxrss
+	return rusage.Maxrss
 }

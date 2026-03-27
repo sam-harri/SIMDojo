@@ -1,0 +1,7 @@
+id = "005-count-matches"
+title = "Count Matches"
+difficulty = "easy"
+order = 5
+compile_flags = "-std=c++17 -mavx2 -O2"
+time_limit_seconds = 5
+memory_limit_mb = 128

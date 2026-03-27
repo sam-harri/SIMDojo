@@ -52,12 +52,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="flex min-h-full flex-col antialiased">
+      <body className="flex h-full flex-col overflow-hidden antialiased">
         <ClerkProvider ui={ui}>
           <ThemeProvider>
             <TooltipProvider>
               <Header />
-              <main className="flex-1">{children}</main>
+              <main className="min-h-0 flex-1 overflow-auto">{children}</main>
             </TooltipProvider>
           </ThemeProvider>
         </ClerkProvider>

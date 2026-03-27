@@ -84,6 +84,7 @@ func run() error {
 	problemsH := handler.NewProblemsHandler(store)
 	j := judge.New(pool, store, cfg.DevMode, cfg.ExtraCompileFlags)
 	submissionsH := handler.NewSubmissionsHandler(pool, j)
+	defer submissionsH.Close()
 
 	// Router
 	r := chi.NewRouter()
