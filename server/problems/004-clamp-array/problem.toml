@@ -2,6 +2,7 @@ id = "004-clamp-array"
 title = "Clamp Array"
 difficulty = "easy"
 order = 4
+tags = ["comparison", "branchless"]
 compile_flags = "-std=c++17 -mavx2 -O2"
 time_limit_seconds = 5
 memory_limit_mb = 128

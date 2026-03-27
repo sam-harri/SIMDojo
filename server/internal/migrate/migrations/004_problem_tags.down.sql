@@ -1,0 +1,2 @@
+ALTER TABLE problem DROP CONSTRAINT IF EXISTS problem_tags_check;
+ALTER TABLE problem DROP COLUMN IF EXISTS tags;

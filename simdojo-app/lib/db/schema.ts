@@ -13,10 +13,18 @@ export const problem = pgTable("problem", {
 	isPublished: boolean("is_published").default(false).notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	tags: text().array().default([""]).notNull(),
 }, (table) => [
 	unique("problem_slug_key").on(table.slug),
 	check("problem_difficulty_check", sql`difficulty = ANY (ARRAY['easy'::text, 'medium'::text, 'hard'::text])`),
+	check("problem_tags_check", sql`tags <@ ARRAY['arithmetic'::text, 'comparison'::text, 'load-store'::text, 'shuffle'::text, 'masking'::text, 'reduction'::text, 'bitwise'::text, 'branchless'::text]`),
 ]);
+
+export const schemaMigrations = pgTable("schema_migrations", {
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	version: bigint({ mode: "number" }).primaryKey().notNull(),
+	dirty: boolean().notNull(),
+});
 
 export const submission = pgTable("submission", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
@@ -33,12 +41,13 @@ export const submission = pgTable("submission", {
 	execTimeNs: bigint("exec_time_ns", { mode: "number" }),
 	compilerOutput: text("compiler_output"),
 	runtimeOutput: text("runtime_output"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	mode: text().default('submit').notNull(),
 	testResults: jsonb("test_results"),
 	firstFailure: jsonb("first_failure"),
 	programOutput: text("program_output"),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	peakMemoryKb: bigint("peak_memory_kb", { mode: "number" }),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
 	index("submission_created_at_idx").using("btree", table.createdAt.asc().nullsLast().op("timestamptz_ops")),
 	index("submission_problem_id_idx").using("btree", table.problemId.asc().nullsLast().op("int8_ops")),
@@ -61,9 +70,9 @@ export const problemCompletion = pgTable("problem_completion", {
 	problemId: bigint("problem_id", { mode: "number" }).notNull(),
 	firstSolvedAt: timestamp("first_solved_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	bestExecTimeNs: bigint("best_exec_time_ns", { mode: "number" }),
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	bestSubmissionId: bigint("best_submission_id", { mode: "number" }),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	bestExecTimeNs: bigint("best_exec_time_ns", { mode: "number" }),
 }, (table) => [
 	index("problem_completion_problem_id_idx").using("btree", table.problemId.asc().nullsLast().op("int8_ops")),
 	index("problem_completion_user_id_idx").using("btree", table.userId.asc().nullsLast().op("text_ops")),
@@ -79,9 +88,3 @@ export const problemCompletion = pgTable("problem_completion", {
 		}),
 	unique("problem_completion_user_id_problem_id_key").on(table.userId, table.problemId),
 ]);
-
-export const schemaMigrations = pgTable("schema_migrations", {
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	version: bigint({ mode: "number" }).primaryKey().notNull(),
-	dirty: boolean().notNull(),
-});

@@ -2,6 +2,7 @@ id = "009-pack-and-filter"
 title = "Pack and Filter"
 difficulty = "hard"
 order = 9
+tags = ["masking", "shuffle", "load-store"]
 compile_flags = "-std=c++17 -mavx2 -O2"
 time_limit_seconds = 5
 memory_limit_mb = 256

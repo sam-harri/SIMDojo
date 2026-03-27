@@ -89,15 +89,16 @@ func (s *Store) loadProblem(dir string) (*Problem, error) {
 func (s *Store) SyncToDB(ctx context.Context, pool *pgxpool.Pool) error {
 	for _, p := range s.problems {
 		_, err := pool.Exec(ctx, `
-			INSERT INTO problem (slug, title, difficulty, sort_order, is_published)
-			VALUES ($1, $2, $3, $4, true)
+			INSERT INTO problem (slug, title, difficulty, sort_order, tags, is_published)
+			VALUES ($1, $2, $3, $4, $5, true)
 			ON CONFLICT (slug) DO UPDATE SET
 				title = EXCLUDED.title,
 				difficulty = EXCLUDED.difficulty,
 				sort_order = EXCLUDED.sort_order,
+				tags = EXCLUDED.tags,
 				is_published = EXCLUDED.is_published,
 				updated_at = now()
-		`, p.Config.ID, p.Config.Title, p.Config.Difficulty, p.Config.Order)
+		`, p.Config.ID, p.Config.Title, p.Config.Difficulty, p.Config.Order, p.Config.Tags)
 		if err != nil {
 			return fmt.Errorf("upsert problem %s: %w", p.Config.ID, err)
 		}

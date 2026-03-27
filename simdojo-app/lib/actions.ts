@@ -14,6 +14,7 @@ export interface ProblemItem {
   title: string
   difficulty: string
   sortOrder: number
+  tags: string[]
   status: "solved" | "attempted" | "unattempted"
 }
 
@@ -67,6 +68,7 @@ export async function fetchProblems(): Promise<ProblemItem[]> {
     title: p.title,
     difficulty: p.difficulty,
     sortOrder: p.sortOrder,
+    tags: p.tags ?? [],
     status: completedIds.has(p.id)
       ? "solved"
       : attemptedIds.has(p.id)

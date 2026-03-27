@@ -2,6 +2,7 @@ id = "010-population-count"
 title = "Population Count"
 difficulty = "hard"
 order = 10
+tags = ["bitwise", "arithmetic"]
 compile_flags = "-std=c++17 -mavx2 -O2"
 time_limit_seconds = 5
 memory_limit_mb = 256
