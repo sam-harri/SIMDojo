@@ -10,7 +10,9 @@ RUN apk add --no-cache \
     libnl3-dev \
     linux-headers \
     protobuf-dev \
-    musl-dev
+    musl-dev \
+    libc-dev \
+    bsd-compat-headers
 
 ARG NSJAIL_VERSION=3.4
 RUN git clone --branch ${NSJAIL_VERSION} --depth 1 \
