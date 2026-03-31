@@ -1,5 +1,5 @@
 # build nsail from source
-FROM alpine:3.21 AS nsjail-builder
+FROM alpine:3.22 AS nsjail-builder
 
 RUN apk add --no-cache \
     build-base \
@@ -16,7 +16,7 @@ RUN git clone --branch ${NSJAIL_VERSION} --depth 1 \
     https://github.com/google/nsjail.git /nsjail && \
     cd /nsjail && make -j$(nproc)
 
-FROM golang:1.26-alpine3.21 AS go-builder
+FROM golang:1.26-alpine3.22 AS go-builder
 
 WORKDIR /build
 
@@ -29,7 +29,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -trimpath -ldflags="-s -w" -o /app/server .
 
-FROM alpine:3.21
+FROM alpine:3.22
 
 # clang/g++/musl-dev: C++17 compilation of user submissions and harnesses
 # libcap/libnl3/protobuf: nsjail runtime shared library dependencies
