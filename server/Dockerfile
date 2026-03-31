@@ -21,20 +21,16 @@ FROM golang:1.26-alpine3.22 AS go-builder
 WORKDIR /build
 
 # dependencies first for layer caching
-COPY go.mod go.sum ./
+COPY server/go.mod server/go.sum ./
 RUN go mod download
 
-COPY . .
+COPY server/ .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -trimpath -ldflags="-s -w" -o /app/server .
 
 FROM alpine:3.22
 
-# clang/g++/musl-dev: C++17 compilation of user submissions and harnesses
-# libcap/libnl3/protobuf: nsjail runtime shared library dependencies
-# ca-certificates: outbound TLS (Clerk JWKS fetch)
-# tzdata: timezone support
 RUN apk add --no-cache \
     clang \
     g++ \
@@ -45,11 +41,9 @@ RUN apk add --no-cache \
     ca-certificates \
     tzdata
 
-# nsjail requires CAP_SYS_ADMIN / CAP_NET_ADMIN to create namespaces.
-# Run the container with --privileged or --cap-add SYS_ADMIN --cap-add NET_ADMIN.
 COPY --from=nsjail-builder /nsjail/nsjail /usr/local/bin/nsjail
 COPY --from=go-builder /app/server /app/server
-COPY problems/ /app/problems/
+COPY server/problems/ /app/problems/
 
 WORKDIR /app
 
