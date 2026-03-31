@@ -1,5 +1,4 @@
-# build nsail from source
-FROM alpine:3.22 AS nsjail-builder
+FROM alpine:3.20 AS nsjail-builder
 
 RUN apk add --no-cache \
     build-base \
@@ -10,15 +9,14 @@ RUN apk add --no-cache \
     libnl3-dev \
     linux-headers \
     protobuf-dev \
-    musl-dev \
-    libc-dev \
-    bsd-compat-headers
+    musl-dev
 
-ARG NSJAIL_VERSION=master
+ARG NSJAIL_VERSION=3.4
 RUN git clone --branch ${NSJAIL_VERSION} --depth 1 \
     https://github.com/google/nsjail.git /nsjail && \
     cd /nsjail && make -j$(nproc)
 
+    
 FROM golang:1.26-alpine3.22 AS go-builder
 
 WORKDIR /build
