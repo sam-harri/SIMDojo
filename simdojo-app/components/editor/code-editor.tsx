@@ -11,19 +11,9 @@ import { cpp } from "@codemirror/lang-cpp"
 import { oneDark } from "@codemirror/theme-one-dark"
 import { oneLight } from "./theme-one-light"
 import { useTheme } from "@/components/theme/theme-provider"
-import intrinsicsData from "./avx2_intrinsics.json.json"
+import { avx2Data, type Intrinsic } from "@/lib/intrinsics/registry"
 
-type Intrinsic = {
-  name: string
-  sig: string
-  detail: string
-  description: string
-  operation: string
-  instruction: string
-  category: string
-}
-
-const intrinsics = intrinsicsData as Intrinsic[]
+const intrinsics = avx2Data as Intrinsic[]
 
 const intrinsicMap = new Map(intrinsics.map((i) => [i.name, i]))
 

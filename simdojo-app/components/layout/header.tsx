@@ -24,6 +24,21 @@ export async function Header() {
               Problems
             </Button>
           </Link>
+          <Link href="/reference">
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+              Reference
+            </Button>
+          </Link>
+          <Link href="/learn">
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+              Learn
+            </Button>
+          </Link>
+          <Link href="/blog">
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+              Blog
+            </Button>
+          </Link>
           {userId && (
             <Link href="/profile">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">

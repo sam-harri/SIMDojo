@@ -1,0 +1,8 @@
+id = "001-add-arrays"
+title = "Add Two Arrays"
+difficulty = "easy"
+order = 1
+tags = ["arithmetic", "load-store"]
+compile_flags = "-std=c++17 -mavx2 -O2"
+time_limit_seconds = 5
+memory_limit_mb = 128

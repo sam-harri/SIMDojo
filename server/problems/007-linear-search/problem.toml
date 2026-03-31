@@ -1,8 +1,0 @@
-id = "007-linear-search"
-title = "Linear Search"
-difficulty = "medium"
-order = 7
-tags = ["comparison", "masking", "branchless"]
-compile_flags = "-std=c++17 -mavx2 -O2"
-time_limit_seconds = 5
-memory_limit_mb = 128

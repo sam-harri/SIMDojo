@@ -1,8 +1,0 @@
-id = "008-prefix-sum"
-title = "Prefix Sum"
-difficulty = "medium"
-order = 8
-tags = ["arithmetic", "shuffle"]
-compile_flags = "-std=c++17 -mavx2 -O2"
-time_limit_seconds = 5
-memory_limit_mb = 256

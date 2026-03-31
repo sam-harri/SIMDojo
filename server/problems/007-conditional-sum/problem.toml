@@ -1,0 +1,8 @@
+id = "007-conditional-sum"
+title = "Conditional Sum"
+difficulty = "medium"
+order = 7
+tags = ["comparison", "masking", "arithmetic"]
+compile_flags = "-std=c++17 -mavx2 -O2"
+time_limit_seconds = 5
+memory_limit_mb = 128

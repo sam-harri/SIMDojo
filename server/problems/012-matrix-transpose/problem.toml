@@ -1,0 +1,8 @@
+id = "012-matrix-transpose"
+title = "Matrix Transpose 8×8"
+difficulty = "hard"
+order = 12
+tags = ["shuffle", "load-store"]
+compile_flags = "-std=c++17 -mavx2 -O2"
+time_limit_seconds = 5
+memory_limit_mb = 128
