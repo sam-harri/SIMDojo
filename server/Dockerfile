@@ -9,7 +9,8 @@ RUN apk add --no-cache \
     libcap-dev \
     libnl3-dev \
     linux-headers \
-    protobuf-dev
+    protobuf-dev \
+    musl-dev
 
 ARG NSJAIL_VERSION=3.4
 RUN git clone --branch ${NSJAIL_VERSION} --depth 1 \
