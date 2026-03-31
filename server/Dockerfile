@@ -14,7 +14,7 @@ RUN apk add --no-cache \
     libc-dev \
     bsd-compat-headers
 
-ARG NSJAIL_VERSION=3.4
+ARG NSJAIL_VERSION=master
 RUN git clone --branch ${NSJAIL_VERSION} --depth 1 \
     https://github.com/google/nsjail.git /nsjail && \
     cd /nsjail && make -j$(nproc)
