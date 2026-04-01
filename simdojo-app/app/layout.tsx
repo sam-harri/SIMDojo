@@ -24,9 +24,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
+const DESCRIPTION = "Practice AVX2 SIMD programming with interactive challenges. Master Intel intrinsics through hands-on coding challenges."
+
 export const metadata: Metadata = {
-  title: "simdojo — SIMD Challenge Platform",
-  description: "Practice AVX2 SIMD programming with interactive challenges",
+  metadataBase: new URL("https://simdojo.dev"),
+  title: {
+    default: "simdojo",
+    template: "%s — simdojo",
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: "simdojo",
+    title: "simdojo — AVX2 SIMD Challenge Platform",
+    description: DESCRIPTION,
+    url: "https://simdojo.dev",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "simdojo — AVX2 SIMD Challenge Platform",
+    description: DESCRIPTION,
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 }
 
 export default function RootLayout({
