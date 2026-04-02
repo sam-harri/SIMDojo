@@ -45,13 +45,13 @@ export default function HomePage() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-xl bg-card px-4 py-3 ring-1 ring-foreground/[0.06]"
+                className="flex items-center gap-2 rounded-xl bg-card px-3 py-3 ring-1 ring-foreground/[0.06] sm:gap-3 sm:px-4"
               >
-                <Skeleton className="h-3.5 w-3.5 rounded-full" />
-                <Skeleton className="h-4 w-6" />
-                <Skeleton className="h-5 w-14 rounded-md" />
-                <Skeleton className="h-4 w-32" />
-                <div className="ml-auto flex gap-1">
+                <Skeleton className="h-3.5 w-4 shrink-0 rounded-full sm:w-3.5" />
+                <Skeleton className="h-4 w-6 shrink-0" />
+                <Skeleton className="h-5 w-14 shrink-0 rounded-md" />
+                <Skeleton className="h-4 w-32 flex-1" />
+                <div className="ml-auto hidden gap-1 sm:flex">
                   <Skeleton className="h-4 w-12 rounded-md" />
                   <Skeleton className="h-4 w-14 rounded-md" />
                 </div>
