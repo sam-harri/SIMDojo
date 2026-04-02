@@ -1,4 +1,4 @@
-Count how many elements in an array are equal to a given target value, using AVX2 intrinsics.
+Count how many elements in an array are equal to a given target value using AVX2 intrinsics.
 
 ## Function Signature
 
@@ -10,9 +10,9 @@ int count_matches(const int32_t* arr, int n, int32_t target);
 ```
 
 **Parameters:**
-- `arr` — pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
-- `target` — the value to count
+- `arr`: pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
+- `target`: the value to count
 
 **Returns:** the number of elements equal to `target`
 
@@ -31,12 +31,10 @@ Output: 4
 
 ## Notes
 
-There are two common approaches to this problem:
+Two common approaches:
 
 1. **Movemask + popcount:** Compare, extract an 8-bit mask with `movemask`, and count bits with `__builtin_popcount`.
-2. **Mask-as-minus-one trick:** `cmpeq` produces all-ones per matching lane — which is `-1` as a signed integer. Accumulate with `add_epi32`, then negate the final sum.
-
-The second approach avoids the `movemask` bottleneck entirely and is a useful pattern to know.
+2. **Mask-as-minus-one:** `cmpeq` produces all-ones per matching lane, which is `-1` as a signed integer. Accumulate with `add_epi32`, then negate the final sum. This avoids the `movemask` bottleneck.
 
 :::hint{title="Hint 1: Vectorized comparison"}
 `_mm256_cmpeq_epi32(v, target_vec)` produces a mask where each 32-bit lane is all-ones (`0xFFFFFFFF`) if equal, or all-zeros if not.

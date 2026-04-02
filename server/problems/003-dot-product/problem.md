@@ -12,9 +12,9 @@ int32_t dot_product(const int32_t* a, const int32_t* b, int n);
 ```
 
 **Parameters:**
-- `a` — pointer to the first array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `b` — pointer to the second array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
+- `a`: pointer to the first array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `b`: pointer to the second array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
 
 **Returns:** the dot product of the two arrays (guaranteed to fit in `int32_t`)
 
@@ -36,7 +36,7 @@ Output: 72
 
 ## Notes
 
-Your solution should use AVX2 intrinsics to process 8 integer pairs at a time. Multiply corresponding elements, accumulate the products, and reduce to a scalar at the end.
+Multiply corresponding elements 8 at a time, accumulate the products, then reduce to a scalar at the end.
 
 :::hint{title="Hint 1: Element-wise multiplication"}
 `_mm256_mullo_epi32(a, b)` multiplies two vectors of 8 packed 32-bit integers element-wise, returning the low 32 bits of each product.

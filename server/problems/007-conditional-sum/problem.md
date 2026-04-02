@@ -1,6 +1,4 @@
-Sum all elements in an array that are strictly less than a given threshold, using AVX2 masking.
-
-This is a classic SIMD predication problem: instead of branching on each element, you compute both paths and use a mask to select which results contribute to the final sum.
+Sum all elements in an array that are strictly less than a given threshold using AVX2 masking.
 
 ## Function Signature
 
@@ -12,9 +10,9 @@ int32_t conditional_sum(const int32_t* arr, int n, int32_t threshold);
 ```
 
 **Parameters:**
-- `arr` — pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
-- `threshold` — sum only elements strictly less than this value
+- `arr`: pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
+- `threshold`: sum only elements strictly less than this value
 
 **Returns:** the sum of all elements where `arr[i] < threshold` (guaranteed to fit in `int32_t`)
 
@@ -35,16 +33,16 @@ Output: 10  (1 + 3 + 2 + 4)
 
 ## Notes
 
-AVX2 has no `cmplt` instruction — use `_mm256_cmpgt_epi32` with the arguments swapped: `cmpgt(threshold, x)` gives you a mask where `x < threshold`.
+AVX2 has no `cmplt` instruction. Use `_mm256_cmpgt_epi32` with arguments swapped: `cmpgt(threshold, x)` gives a mask where `x < threshold`.
 
-When one branch of the predication is zero (as it is here — you either add the element or add nothing), you can use bitwise AND with the mask instead of a blend. This saves a cycle on most microarchitectures.
+Since one branch of the predication is zero (you either add the element or nothing), use bitwise AND with the mask instead of a blend.
 
 :::hint{title="Hint 1: Comparison mask"}
-`_mm256_cmpgt_epi32(thresh_vec, x)` produces all-ones in lanes where `x < threshold`. There is no `cmplt` — just swap the operand order.
+`_mm256_cmpgt_epi32(thresh_vec, x)` produces all-ones in lanes where `x < threshold`. There is no `cmplt` — swap the operand order.
 :::
 
 :::hint{title="Hint 2: Zeroing non-qualifying elements"}
-`_mm256_and_si256(x, mask)` keeps `x` where the mask is all-ones and produces zero where the mask is all-zeros. No blend needed when one branch is zero.
+`_mm256_and_si256(x, mask)` keeps `x` where the mask is all-ones and produces zero elsewhere.
 :::
 
 :::hint{title="Hint 3: Accumulate and reduce"}

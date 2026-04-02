@@ -10,8 +10,8 @@ int32_t array_sum(const int32_t* arr, int n);
 ```
 
 **Parameters:**
-- `arr` — pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
+- `arr`: pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
 
 **Returns:** the sum of all elements in the array (guaranteed to fit in `int32_t`)
 
@@ -32,7 +32,7 @@ Output: 36
 
 ## Notes
 
-Your solution should use AVX2 intrinsics to process 8 integers at a time. A scalar solution will produce correct results but will not achieve a meaningful speedup.
+Process 8 integers at a time using an accumulator register. After the loop, horizontally reduce the vector accumulator to a scalar.
 
 :::hint{title="Hint 1: Loading data"}
 `_mm256_load_si256` loads 8 packed 32-bit integers from a 32-byte aligned address into a 256-bit register.

@@ -10,12 +10,12 @@ void add_arrays(const int32_t* a, const int32_t* b, int32_t* c, int n);
 ```
 
 **Parameters:**
-- `a` — pointer to the first input array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `b` — pointer to the second input array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `c` — pointer to the output array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
+- `a`: pointer to the first input array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `b`: pointer to the second input array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `c`: pointer to the output array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
 
-**Returns:** nothing — results are written to `c`
+**Returns:** nothing; results are written to `c`
 
 ## Example
 
@@ -35,7 +35,7 @@ c = [11, 22, 33, 44, 55, 66, 77, 88]
 
 ## Notes
 
-This is the "Hello, World!" of SIMD. Your solution should use AVX2 intrinsics to process 8 integers at a time — load a chunk from each input, add them together, and store the result.
+Use AVX2 intrinsics to process 8 integers at a time: load a chunk from each input, add them, and store the result.
 
 :::hint{title="Hint 1: Loading data"}
 `_mm256_load_si256` loads 8 packed 32-bit integers from a 32-byte aligned address into a 256-bit register. Cast your pointer with `reinterpret_cast<const __m256i*>(ptr + i)`.

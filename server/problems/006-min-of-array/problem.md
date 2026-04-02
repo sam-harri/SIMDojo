@@ -10,8 +10,8 @@ int32_t array_min(const int32_t* arr, int n);
 ```
 
 **Parameters:**
-- `arr` — pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
+- `arr`: pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
 
 **Returns:** the minimum element in the array
 
@@ -31,7 +31,7 @@ Output: 1
 
 ## Notes
 
-Your solution should use AVX2 intrinsics to compare 8 integers at a time. Unlike a sum reduction, you cannot use `_mm_hadd` for the final horizontal step — you need a shuffle-and-min pattern instead.
+Unlike sum reduction, you cannot use `_mm_hadd` for the final horizontal step. Use a shuffle-and-min pattern instead.
 
 :::hint{title="Hint 1: Vertical reduction"}
 `_mm256_min_epi32(a, b)` compares two vectors element-wise and keeps the smaller value in each lane. Use this to reduce the entire array down to a single vector of 8 minimums.

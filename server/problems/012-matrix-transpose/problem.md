@@ -10,7 +10,7 @@ void transpose_8x8(int32_t* matrix);
 ```
 
 **Parameters:**
-- `matrix` — pointer to 64 contiguous `int32_t` values representing an 8x8 matrix in row-major order, guaranteed 32-byte aligned
+- `matrix`: pointer to 64 contiguous `int32_t` values representing an 8x8 matrix in row-major order, guaranteed 32-byte aligned
 
 The matrix is stored as 64 elements: row 0 occupies indices `[0..7]`, row 1 occupies indices `[8..15]`, and so on.
 
@@ -43,10 +43,10 @@ Output (transposed):
 
 ## Notes
 
-This is the classic AVX2 "butterfly" transpose. The key insight is that an 8x8 transpose can be decomposed into three phases of pairwise operations on 256-bit registers, avoiding any scalar element shuffling.
+An 8x8 transpose can be decomposed into three phases of pairwise operations on 256-bit registers, avoiding any scalar element shuffling.
 
 :::hint{title="Hint 1: Load each row into its own register"}
-Use `_mm256_load_si256` to load each of the 8 rows into its own `__m256i` register. This gives you 8 registers, each holding one row of the matrix.
+Use `_mm256_load_si256` to load each of the 8 rows into its own `__m256i` register.
 :::
 
 :::hint{title="Hint 2: Interleave with unpacklo/hi"}

@@ -1,8 +1,6 @@
 Compute the inclusive prefix sum of an array using AVX2 intrinsics.
 
-The prefix sum (also called scan) of an array is a new array where each element is the sum of all elements up to and including that position: `output[i] = input[0] + input[1] + ... + input[i]`.
-
-Prefix sum is inherently sequential — each output depends on all previous inputs. The SIMD challenge is to compute it faster despite this dependency.
+Each output element is the sum of all input elements up to and including that position: `output[i] = input[0] + input[1] + ... + input[i]`.
 
 ## Function Signature
 
@@ -14,9 +12,9 @@ void prefix_sum(const int32_t* input, int32_t* output, int n);
 ```
 
 **Parameters:**
-- `input` — pointer to the input array, guaranteed 32-byte aligned
-- `output` — pointer to the output array, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
+- `input`: pointer to the input array, guaranteed 32-byte aligned
+- `output`: pointer to the output array, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
 
 **Returns:** nothing (result is written to `output`)
 
@@ -37,9 +35,9 @@ Output: [1, 3, 6, 10, 15, 21, 28, 36]
 
 ## Notes
 
-The standard approach computes a prefix sum within each 8-element block using shifts and adds, then propagates the block total to the next block as a running offset.
+Compute a prefix sum within each 8-element block using shifts and adds, then propagate the block total to the next block as a running offset.
 
-The tricky part is that `_mm256_slli_si256` shifts within each 128-bit lane independently — it does **not** shift across the lane boundary. You need a separate cross-lane fix-up step.
+Note: `_mm256_slli_si256` shifts within each 128-bit lane independently — it does **not** shift across the lane boundary. A cross-lane fix-up step is required.
 
 :::hint{title="Hint 1: In-lane prefix sum"}
 `_mm256_slli_si256(x, 4)` shifts each 128-bit lane left by 4 bytes (one int32). Add this to `x` to get 2-wide prefix sums. Repeat with a shift of 8 bytes for 4-wide prefix sums. Each 128-bit lane now has its own independent prefix sum.

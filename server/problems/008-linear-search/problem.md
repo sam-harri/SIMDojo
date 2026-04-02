@@ -1,6 +1,6 @@
 Find the index of the first occurrence of a target value in an array using AVX2.
 
-Return the index of the first element equal to `target`, or `-1` if not found. This is the vectorized equivalent of `std::find`.
+Return the index of the first element equal to `target`, or `-1` if not found.
 
 ## Function Signature
 
@@ -12,9 +12,9 @@ int linear_search(const int32_t* arr, int n, int32_t target);
 ```
 
 **Parameters:**
-- `arr` — pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
-- `n` — number of elements, guaranteed to be a multiple of 8 and at least 8
-- `target` — the value to search for
+- `arr`: pointer to an array of `n` signed 32-bit integers, guaranteed 32-byte aligned
+- `n`: number of elements, guaranteed to be a multiple of 8 and at least 8
+- `target`: the value to search for
 
 **Returns:** the index of the first occurrence of `target`, or `-1` if not found
 
@@ -34,9 +34,7 @@ Output: 4
 
 ## Notes
 
-The key advantage of SIMD search is comparing 8 elements at once. When a match is found in a block, you need to determine *which* lane matched — this is where `movemask` and `ctz` (count trailing zeros) come in.
-
-Unlike sum-based problems, search benefits from early exit: you can return as soon as the first match is found.
+Compare 8 elements at once. When a match is found in a block, use `movemask` and `ctz` (count trailing zeros) to identify which lane matched. Return as soon as the first match is found.
 
 :::hint{title="Hint 1: Broadcast and compare"}
 Broadcast the target with `_mm256_set1_epi32(target)`, then compare each 8-element block with `_mm256_cmpeq_epi32`. This produces all-ones in matching lanes.
@@ -47,7 +45,7 @@ Cast the comparison result to `__m256` with `_mm256_castsi256_ps`, then `_mm256_
 :::
 
 :::hint{title="Hint 3: Find which lane matched"}
-`__builtin_ctz(mask)` returns the index of the lowest set bit — which corresponds to the first matching lane. Add the block offset `i` to get the array index.
+`__builtin_ctz(mask)` returns the index of the lowest set bit, which corresponds to the first matching lane. Add the block offset `i` to get the array index.
 :::
 
 ## Useful Intrinsics
